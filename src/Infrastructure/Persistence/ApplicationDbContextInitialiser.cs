@@ -48,17 +48,17 @@ public class ApplicationDbContextInitialiser
 	{
 		// Default data
 		// Seed, if necessary
-		if (!_context.TodoLists.Any())
+		if (!_context.HabitLists.Any())
 		{
-			_context.TodoLists.Add(new TodoList
+			_context.HabitLists.Add(new HabitList
 			{
 				Title = "Todo List",
-				Items =
+				Habits =
 				{
-					new TodoItem { Title = "Make a todo list 📃" },
-					new TodoItem { Title = "Check off the first item ✅" },
-					new TodoItem { Title = "Realise you've already done two things on the list! 🤯"},
-					new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
+					new Habit { Title = "Make a todo list 📃" },
+					new Habit { Title = "Check off the first item ✅" },
+					new Habit { Title = "Realise you've already done two things on the list! 🤯"},
+					new Habit { Title = "Reward yourself with a nice, long nap 🏆" },
 				}
 			});
 

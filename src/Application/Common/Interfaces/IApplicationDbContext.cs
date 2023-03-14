@@ -5,9 +5,9 @@ namespace Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
-	DbSet<TodoList> TodoLists { get; }
+	DbSet<HabitList> HabitLists { get; }
 
-	DbSet<TodoItem> TodoItems { get; }
+	DbSet<Habit> Habits { get; }
 
 	Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

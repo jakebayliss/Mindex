@@ -22,8 +22,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
 
-    public DbSet<TodoList> TodoLists => Set<TodoList>();
-    public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+    public DbSet<HabitList> HabitLists => Set<HabitList>();
+    public DbSet<Habit> Habits => Set<Habit>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

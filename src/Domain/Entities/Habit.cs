@@ -1,8 +1,8 @@
 ﻿namespace Domain.Entities;
 
-public class TodoItem
+public class Habit
 {
-	public int ListId { get; set; }
+	public int Id { get; set; }
 
 	public string? Title { get; set; }
 
@@ -11,5 +11,5 @@ public class TodoItem
 	public DateTime? Reminder { get; set; }
 
 
-	public TodoList List { get; set; } = null!;
+	public HabitList HabitList { get; set; } = null!;
 }
