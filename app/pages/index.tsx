@@ -1,24 +1,21 @@
-import Calendar from '@/components/Calendar'
 import { useState } from 'react';
+import { MsalProvider } from "@azure/msal-react";
+import { PublicClientApplication, AccountInfo } from "@azure/msal-browser";
+import { msalConfig } from "../auth/authConfig";
+import { UserContext } from '../auth/UserContext';
+import HomePage from './home';
+
+export const msalInstance = new PublicClientApplication(msalConfig);
 
 const Home = () => {
-
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-  const handleDateClick = (clickedDate: Date | null) => {
-    if (clickedDate) {
-      setSelectedDate(clickedDate);
-    }
-  }
+  const [user, setUser] = useState<AccountInfo | null>(null);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="max-w-5xl items-center justify-center font-mono text-sm">
-        
-        <Calendar onDateClick={(clickedDate) => handleDateClick(clickedDate)} />
-        <h4 className='text-center py-2'>{selectedDate?.toDateString()}</h4>
-      </div>
-    </main>
+    <UserContext.Provider value={{user, setUser}}>
+      <MsalProvider instance={msalInstance}>
+        <HomePage />
+      </MsalProvider>
+    </UserContext.Provider>
   )
 }
 
