@@ -74,7 +74,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HabitList"
+                  "$ref": "#/components/schemas/HabitListDto"
                 }
               }
             }
@@ -118,7 +118,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Habit"
+                  "$ref": "#/components/schemas/HabitListDto"
                 }
               }
             }
@@ -162,7 +162,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Habit"
+                  "$ref": "#/components/schemas/HabitDto"
                 }
               }
             }
@@ -359,27 +359,42 @@
           }
         }
       },
-      "HabitList": {
+      "NewListCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
           "userId": {
             "type": "string",
             "format": "guid"
           },
-          "habits": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Habit"
-            }
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "NewHabitCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "listId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateHabitCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "habit": {
+            "$ref": "#/components/schemas/Habit"
           }
         }
       },
@@ -410,44 +425,6 @@
           }
         }
       },
-      "NewListCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "habitList": {
-            "$ref": "#/components/schemas/HabitList"
-          }
-        }
-      },
-      "NewHabitCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "listId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string"
-          },
-          "note": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateHabitCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "habit": {
-            "$ref": "#/components/schemas/Habit"
-          }
-        }
-      },
       "DeleteHabitCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -455,6 +432,30 @@
           "habitId": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "HabitList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "habits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Habit"
+            }
           }
         }
       },

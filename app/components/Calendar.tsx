@@ -13,13 +13,11 @@ function Calendar({ onDateClick }: CalendarProps) {
   const prevMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() - 1));
     setMonthIndex(monthIndex - 1);
-    console.log(monthIndex);
   };
 
   const nextMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() + 1));
     setMonthIndex(monthIndex + 1);
-    console.log(monthIndex);
   };
 
   const getDaysInMonth = (year: number, month: number) => {

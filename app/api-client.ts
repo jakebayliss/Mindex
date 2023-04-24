@@ -12,11 +12,11 @@ export interface IHabitsClient {
 
     getUserHabits(userId: string | null): Promise<UserHabitsDto>;
 
-    createHabitList(userId: string | null, command: NewListCommand): Promise<HabitList>;
+    createHabitList(userId: string | null, command: NewListCommand): Promise<HabitListDto>;
 
-    createHabit(userId: string | null, command: NewHabitCommand): Promise<Habit>;
+    createHabit(userId: string | null, command: NewHabitCommand): Promise<HabitListDto>;
 
-    updateHabit(userId: string | null, command: UpdateHabitCommand): Promise<Habit>;
+    updateHabit(userId: string | null, command: UpdateHabitCommand): Promise<HabitDto>;
 
     deleteHabit(userId: string | null, command: DeleteHabitCommand): Promise<Habit>;
 
@@ -72,7 +72,7 @@ export class HabitsClient implements IHabitsClient {
         return Promise.resolve<UserHabitsDto>(null as any);
     }
 
-    createHabitList(userId: string | null, command: NewListCommand): Promise<HabitList> {
+    createHabitList(userId: string | null, command: NewListCommand): Promise<HabitListDto> {
         let url_ = this.baseUrl + "/api/Habits/{userId}/newList";
         if (userId === undefined || userId === null)
             throw new Error("The parameter 'userId' must be defined.");
@@ -95,14 +95,14 @@ export class HabitsClient implements IHabitsClient {
         });
     }
 
-    protected processCreateHabitList(response: Response): Promise<HabitList> {
+    protected processCreateHabitList(response: Response): Promise<HabitListDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = HabitList.fromJS(resultData200);
+            result200 = HabitListDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -110,10 +110,10 @@ export class HabitsClient implements IHabitsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<HabitList>(null as any);
+        return Promise.resolve<HabitListDto>(null as any);
     }
 
-    createHabit(userId: string | null, command: NewHabitCommand): Promise<Habit> {
+    createHabit(userId: string | null, command: NewHabitCommand): Promise<HabitListDto> {
         let url_ = this.baseUrl + "/api/Habits/{userId}/newHabit";
         if (userId === undefined || userId === null)
             throw new Error("The parameter 'userId' must be defined.");
@@ -136,14 +136,14 @@ export class HabitsClient implements IHabitsClient {
         });
     }
 
-    protected processCreateHabit(response: Response): Promise<Habit> {
+    protected processCreateHabit(response: Response): Promise<HabitListDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Habit.fromJS(resultData200);
+            result200 = HabitListDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -151,10 +151,10 @@ export class HabitsClient implements IHabitsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<Habit>(null as any);
+        return Promise.resolve<HabitListDto>(null as any);
     }
 
-    updateHabit(userId: string | null, command: UpdateHabitCommand): Promise<Habit> {
+    updateHabit(userId: string | null, command: UpdateHabitCommand): Promise<HabitDto> {
         let url_ = this.baseUrl + "/api/Habits/{userId}/updateHabit";
         if (userId === undefined || userId === null)
             throw new Error("The parameter 'userId' must be defined.");
@@ -177,14 +177,14 @@ export class HabitsClient implements IHabitsClient {
         });
     }
 
-    protected processUpdateHabit(response: Response): Promise<Habit> {
+    protected processUpdateHabit(response: Response): Promise<HabitDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Habit.fromJS(resultData200);
+            result200 = HabitDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -192,7 +192,7 @@ export class HabitsClient implements IHabitsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<Habit>(null as any);
+        return Promise.resolve<HabitDto>(null as any);
     }
 
     deleteHabit(userId: string | null, command: DeleteHabitCommand): Promise<Habit> {
@@ -463,13 +463,11 @@ export interface IHabitDto {
     listId?: number;
 }
 
-export class HabitList implements IHabitList {
-    id?: number;
-    title?: string | undefined;
+export class NewListCommand implements INewListCommand {
     userId?: string;
-    habits?: Habit[];
+    title?: string;
 
-    constructor(data?: IHabitList) {
+    constructor(data?: INewListCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -480,43 +478,109 @@ export class HabitList implements IHabitList {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
-            this.title = _data["title"];
             this.userId = _data["userId"];
-            if (Array.isArray(_data["habits"])) {
-                this.habits = [] as any;
-                for (let item of _data["habits"])
-                    this.habits!.push(Habit.fromJS(item));
-            }
+            this.title = _data["title"];
         }
     }
 
-    static fromJS(data: any): HabitList {
+    static fromJS(data: any): NewListCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new HabitList();
+        let result = new NewListCommand();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["title"] = this.title;
         data["userId"] = this.userId;
-        if (Array.isArray(this.habits)) {
-            data["habits"] = [];
-            for (let item of this.habits)
-                data["habits"].push(item.toJSON());
-        }
+        data["title"] = this.title;
         return data;
     }
 }
 
-export interface IHabitList {
-    id?: number;
-    title?: string | undefined;
+export interface INewListCommand {
     userId?: string;
-    habits?: Habit[];
+    title?: string;
+}
+
+export class NewHabitCommand implements INewHabitCommand {
+    listId?: number;
+    title?: string;
+    note?: string | undefined;
+
+    constructor(data?: INewHabitCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.listId = _data["listId"];
+            this.title = _data["title"];
+            this.note = _data["note"];
+        }
+    }
+
+    static fromJS(data: any): NewHabitCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new NewHabitCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["listId"] = this.listId;
+        data["title"] = this.title;
+        data["note"] = this.note;
+        return data;
+    }
+}
+
+export interface INewHabitCommand {
+    listId?: number;
+    title?: string;
+    note?: string | undefined;
+}
+
+export class UpdateHabitCommand implements IUpdateHabitCommand {
+    habit?: Habit;
+
+    constructor(data?: IUpdateHabitCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.habit = _data["habit"] ? Habit.fromJS(_data["habit"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UpdateHabitCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateHabitCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["habit"] = this.habit ? this.habit.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUpdateHabitCommand {
+    habit?: Habit;
 }
 
 export class Habit implements IHabit {
@@ -571,126 +635,6 @@ export interface IHabit {
     habitListId?: number;
 }
 
-export class NewListCommand implements INewListCommand {
-    userId?: string;
-    habitList?: HabitList;
-
-    constructor(data?: INewListCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.userId = _data["userId"];
-            this.habitList = _data["habitList"] ? HabitList.fromJS(_data["habitList"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): NewListCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new NewListCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["userId"] = this.userId;
-        data["habitList"] = this.habitList ? this.habitList.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface INewListCommand {
-    userId?: string;
-    habitList?: HabitList;
-}
-
-export class NewHabitCommand implements INewHabitCommand {
-    listId?: number;
-    title?: string;
-    note?: string;
-
-    constructor(data?: INewHabitCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.listId = _data["listId"];
-            this.title = _data["title"];
-            this.note = _data["note"];
-        }
-    }
-
-    static fromJS(data: any): NewHabitCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new NewHabitCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["listId"] = this.listId;
-        data["title"] = this.title;
-        data["note"] = this.note;
-        return data;
-    }
-}
-
-export interface INewHabitCommand {
-    listId?: number;
-    title?: string;
-    note?: string;
-}
-
-export class UpdateHabitCommand implements IUpdateHabitCommand {
-    habit?: Habit;
-
-    constructor(data?: IUpdateHabitCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.habit = _data["habit"] ? Habit.fromJS(_data["habit"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): UpdateHabitCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateHabitCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["habit"] = this.habit ? this.habit.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IUpdateHabitCommand {
-    habit?: Habit;
-}
-
 export class DeleteHabitCommand implements IDeleteHabitCommand {
     habitId?: number;
 
@@ -725,6 +669,62 @@ export class DeleteHabitCommand implements IDeleteHabitCommand {
 
 export interface IDeleteHabitCommand {
     habitId?: number;
+}
+
+export class HabitList implements IHabitList {
+    id?: number;
+    title?: string | undefined;
+    userId?: string;
+    habits?: Habit[];
+
+    constructor(data?: IHabitList) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.userId = _data["userId"];
+            if (Array.isArray(_data["habits"])) {
+                this.habits = [] as any;
+                for (let item of _data["habits"])
+                    this.habits!.push(Habit.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): HabitList {
+        data = typeof data === 'object' ? data : {};
+        let result = new HabitList();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["userId"] = this.userId;
+        if (Array.isArray(this.habits)) {
+            data["habits"] = [];
+            for (let item of this.habits)
+                data["habits"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IHabitList {
+    id?: number;
+    title?: string | undefined;
+    userId?: string;
+    habits?: Habit[];
 }
 
 export class DeleteListCommand implements IDeleteListCommand {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MsalProvider } from "@azure/msal-react";
 import { PublicClientApplication, AccountInfo } from "@azure/msal-browser";
 import { msalConfig } from "../auth/authConfig";
@@ -9,6 +9,10 @@ export const msalInstance = new PublicClientApplication(msalConfig);
 
 const Home = () => {
   const [user, setUser] = useState<AccountInfo | null>(null);
+
+  useEffect(() => {
+    console.log(user);
+  })
 
   return (
     <UserContext.Provider value={{user, setUser}}>

@@ -30,21 +30,21 @@ namespace Mindex.Controllers
 		}
 
 		[HttpPost("{userId}/newList")]
-		public async Task<ActionResult<HabitList>> CreateHabitList(string userId, NewListCommand command)
+		public async Task<ActionResult<HabitListDto>> CreateHabitList(string userId, NewListCommand command)
 		{
 			var newList = await _mediator.Send(command);
 			return Ok(newList);
 		}
 
 		[HttpPost("{userId}/newHabit")]
-		public async Task<ActionResult<Habit>> CreateHabit(string userId, NewHabitCommand command)
+		public async Task<ActionResult<HabitListDto>> CreateHabit(string userId, NewHabitCommand command)
 		{
 			var newHabit = await _mediator.Send(command);
 			return Ok(newHabit);
 		}
 
 		[HttpPut("{userId}/updateHabit")]
-		public async Task<ActionResult<Habit>> UpdateHabit(string userId, UpdateHabitCommand command)
+		public async Task<ActionResult<HabitDto>> UpdateHabit(string userId, UpdateHabitCommand command)
 		{
 			var updatedHabit = await _mediator.Send(command);
 			return Ok(updatedHabit);
