@@ -366,6 +366,7 @@ export interface IUserHabitsDto {
 export class HabitListDto implements IHabitListDto {
     id?: number;
     title?: string;
+    createdOn?: Date;
     habits?: HabitDto[];
 
     constructor(data?: IHabitListDto) {
@@ -381,6 +382,7 @@ export class HabitListDto implements IHabitListDto {
         if (_data) {
             this.id = _data["id"];
             this.title = _data["title"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             if (Array.isArray(_data["habits"])) {
                 this.habits = [] as any;
                 for (let item of _data["habits"])
@@ -400,6 +402,7 @@ export class HabitListDto implements IHabitListDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["title"] = this.title;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         if (Array.isArray(this.habits)) {
             data["habits"] = [];
             for (let item of this.habits)
@@ -412,12 +415,14 @@ export class HabitListDto implements IHabitListDto {
 export interface IHabitListDto {
     id?: number;
     title?: string;
+    createdOn?: Date;
     habits?: HabitDto[];
 }
 
 export class HabitDto implements IHabitDto {
     title?: string | undefined;
     note?: string | undefined;
+    createdOn?: Date;
     reminder?: Date | undefined;
     listId?: number;
 
@@ -434,6 +439,7 @@ export class HabitDto implements IHabitDto {
         if (_data) {
             this.title = _data["title"];
             this.note = _data["note"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.reminder = _data["reminder"] ? new Date(_data["reminder"].toString()) : <any>undefined;
             this.listId = _data["listId"];
         }
@@ -450,6 +456,7 @@ export class HabitDto implements IHabitDto {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["note"] = this.note;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         data["reminder"] = this.reminder ? this.reminder.toISOString() : <any>undefined;
         data["listId"] = this.listId;
         return data;
@@ -459,6 +466,7 @@ export class HabitDto implements IHabitDto {
 export interface IHabitDto {
     title?: string | undefined;
     note?: string | undefined;
+    createdOn?: Date;
     reminder?: Date | undefined;
     listId?: number;
 }
@@ -588,6 +596,7 @@ export class Habit implements IHabit {
     title?: string | undefined;
     note?: string | undefined;
     reminder?: Date | undefined;
+    createdOn?: Date;
     habitListId?: number;
 
     constructor(data?: IHabit) {
@@ -605,6 +614,7 @@ export class Habit implements IHabit {
             this.title = _data["title"];
             this.note = _data["note"];
             this.reminder = _data["reminder"] ? new Date(_data["reminder"].toString()) : <any>undefined;
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.habitListId = _data["habitListId"];
         }
     }
@@ -622,6 +632,7 @@ export class Habit implements IHabit {
         data["title"] = this.title;
         data["note"] = this.note;
         data["reminder"] = this.reminder ? this.reminder.toISOString() : <any>undefined;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         data["habitListId"] = this.habitListId;
         return data;
     }
@@ -632,6 +643,7 @@ export interface IHabit {
     title?: string | undefined;
     note?: string | undefined;
     reminder?: Date | undefined;
+    createdOn?: Date;
     habitListId?: number;
 }
 
@@ -675,6 +687,7 @@ export class HabitList implements IHabitList {
     id?: number;
     title?: string | undefined;
     userId?: string;
+    createdOn?: Date;
     habits?: Habit[];
 
     constructor(data?: IHabitList) {
@@ -691,6 +704,7 @@ export class HabitList implements IHabitList {
             this.id = _data["id"];
             this.title = _data["title"];
             this.userId = _data["userId"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             if (Array.isArray(_data["habits"])) {
                 this.habits = [] as any;
                 for (let item of _data["habits"])
@@ -711,6 +725,7 @@ export class HabitList implements IHabitList {
         data["id"] = this.id;
         data["title"] = this.title;
         data["userId"] = this.userId;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         if (Array.isArray(this.habits)) {
             data["habits"] = [];
             for (let item of this.habits)
@@ -724,6 +739,7 @@ export interface IHabitList {
     id?: number;
     title?: string | undefined;
     userId?: string;
+    createdOn?: Date;
     habits?: Habit[];
 }
 

@@ -9,6 +9,7 @@ public class Habit
 	public string? Note { get; set; }
 
 	public DateTime? Reminder { get; set; }
+	public DateTime CreatedOn { get; set; }
 
 
 	public int HabitListId { get; set; }

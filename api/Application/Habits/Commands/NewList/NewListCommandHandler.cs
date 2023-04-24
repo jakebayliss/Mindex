@@ -2,7 +2,6 @@
 using Application.Habits.Queries.GetUserHabits;
 using Domain.Entities;
 using MediatR;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Application.Habits.Commands.NewList
 {
@@ -26,14 +25,16 @@ namespace Application.Habits.Commands.NewList
 			var newList = new HabitList
 			{
 				UserId = request.UserId,
-				Title = request.Title
+				Title = request.Title,
+				CreatedOn = DateTime.Now
 			};
 			_context.HabitLists.Add(newList);
 			await _context.SaveChangesAsync(cancellationToken);
 			return new HabitListDto
 			{
 				Id = newList.Id,
-				Title = newList.Title
+				Title = newList.Title,
+				CreatedOn = newList.CreatedOn,
 			};
 		}
 	}

@@ -328,6 +328,10 @@
           "title": {
             "type": "string"
           },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
           "habits": {
             "type": "array",
             "items": {
@@ -347,6 +351,10 @@
           "note": {
             "type": "string",
             "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
           },
           "reminder": {
             "type": "string",
@@ -419,6 +427,10 @@
             "format": "date-time",
             "nullable": true
           },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
           "habitListId": {
             "type": "integer",
             "format": "int32"
@@ -450,6 +462,10 @@
           "userId": {
             "type": "string",
             "format": "guid"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
           },
           "habits": {
             "type": "array",

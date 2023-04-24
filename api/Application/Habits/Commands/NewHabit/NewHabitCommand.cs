@@ -29,6 +29,7 @@ namespace Application.Habits.Commands.NewHabit
 				HabitListId = request.ListId,
 				Title = request.Title,
 				Note = request.Note,
+				CreatedOn = DateTime.Now
 			};
 
 			_context.Habits.Add(newHabit);
@@ -39,11 +40,13 @@ namespace Application.Habits.Commands.NewHabit
 			{
 				Id = list.Id,
 				Title = list.Title,
+				CreatedOn = list.CreatedOn,
 				Habits = list.Habits.Select(x => new HabitDto
 				{
 					Title = x.Title,
 					Note = x.Note,
 					Reminder = x.Reminder,
+					CreatedOn = x.CreatedOn,
 					ListId = x.HabitListId
 				}).ToList()
 			};
