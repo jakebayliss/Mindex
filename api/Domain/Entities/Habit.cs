@@ -11,5 +11,5 @@ public class Habit
 	public DateTime? Reminder { get; set; }
 
 
-	public HabitList HabitList { get; set; } = null!;
+	public int HabitListId { get; set; }
 }

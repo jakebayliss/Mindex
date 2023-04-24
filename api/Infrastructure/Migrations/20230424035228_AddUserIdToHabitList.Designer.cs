@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230424035228_AddUserIdToHabitList")]
+    partial class AddUserIdToHabitList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,7 +63,7 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("UserUd")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -70,11 +73,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Habit", b =>
                 {
-                    b.HasOne("Domain.Entities.HabitList", null)
+                    b.HasOne("Domain.Entities.HabitList", "HabitList")
                         .WithMany("Habits")
                         .HasForeignKey("HabitListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("HabitList");
                 });
 
             modelBuilder.Entity("Domain.Entities.HabitList", b =>

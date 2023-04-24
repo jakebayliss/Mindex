@@ -8,56 +8,24 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-export class HabitsClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+export interface IHabitsClient {
 
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : window as any;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
+    getUserHabits(userId: string | null): Promise<UserHabitsDto>;
 
-    hey(): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/Habits";
-        url_ = url_.replace(/[?&]$/, "");
+    createHabitList(userId: string | null, command: NewListCommand): Promise<HabitList>;
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Accept": "application/octet-stream"
-            }
-        };
+    createHabit(userId: string | null, command: NewHabitCommand): Promise<Habit>;
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processHey(_response);
-        });
-    }
+    updateHabit(userId: string | null, command: UpdateHabitCommand): Promise<Habit>;
 
-    protected processHey(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
-    }
+    deleteHabit(userId: string | null, command: DeleteHabitCommand): Promise<Habit>;
+
+    deleteHabitList(userId: string | null, command: DeleteListCommand): Promise<HabitList>;
+
+    updateHabitList(userId: string | null, command: UpdateListCommand): Promise<HabitList>;
 }
 
-export class WeatherForecastClient {
+export class HabitsClient implements IHabitsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -67,8 +35,11 @@ export class WeatherForecastClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(): Promise<WeatherForecast[]> {
-        let url_ = this.baseUrl + "/WeatherForecast";
+    getUserHabits(userId: string | null): Promise<UserHabitsDto> {
+        let url_ = this.baseUrl + "/api/Habits/{userId}";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -79,25 +50,18 @@ export class WeatherForecastClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGet(_response);
+            return this.processGetUserHabits(_response);
         });
     }
 
-    protected processGet(response: Response): Promise<WeatherForecast[]> {
+    protected processGetUserHabits(response: Response): Promise<UserHabitsDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(WeatherForecast.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
+            result200 = UserHabitsDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -105,17 +69,260 @@ export class WeatherForecastClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<WeatherForecast[]>(null as any);
+        return Promise.resolve<UserHabitsDto>(null as any);
+    }
+
+    createHabitList(userId: string | null, command: NewListCommand): Promise<HabitList> {
+        let url_ = this.baseUrl + "/api/Habits/{userId}/newList";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateHabitList(_response);
+        });
+    }
+
+    protected processCreateHabitList(response: Response): Promise<HabitList> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HabitList.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<HabitList>(null as any);
+    }
+
+    createHabit(userId: string | null, command: NewHabitCommand): Promise<Habit> {
+        let url_ = this.baseUrl + "/api/Habits/{userId}/newHabit";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateHabit(_response);
+        });
+    }
+
+    protected processCreateHabit(response: Response): Promise<Habit> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Habit.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Habit>(null as any);
+    }
+
+    updateHabit(userId: string | null, command: UpdateHabitCommand): Promise<Habit> {
+        let url_ = this.baseUrl + "/api/Habits/{userId}/updateHabit";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateHabit(_response);
+        });
+    }
+
+    protected processUpdateHabit(response: Response): Promise<Habit> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Habit.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Habit>(null as any);
+    }
+
+    deleteHabit(userId: string | null, command: DeleteHabitCommand): Promise<Habit> {
+        let url_ = this.baseUrl + "/api/Habits/{userId}/deleteHabit";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteHabit(_response);
+        });
+    }
+
+    protected processDeleteHabit(response: Response): Promise<Habit> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Habit.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Habit>(null as any);
+    }
+
+    deleteHabitList(userId: string | null, command: DeleteListCommand): Promise<HabitList> {
+        let url_ = this.baseUrl + "/api/Habits/{userId}/deleteList";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteHabitList(_response);
+        });
+    }
+
+    protected processDeleteHabitList(response: Response): Promise<HabitList> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HabitList.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<HabitList>(null as any);
+    }
+
+    updateHabitList(userId: string | null, command: UpdateListCommand): Promise<HabitList> {
+        let url_ = this.baseUrl + "/api/Habits/{userId}/updateList";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateHabitList(_response);
+        });
+    }
+
+    protected processUpdateHabitList(response: Response): Promise<HabitList> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HabitList.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<HabitList>(null as any);
     }
 }
 
-export class WeatherForecast implements IWeatherForecast {
-    date?: Date;
-    temperatureC?: number;
-    temperatureF?: number;
-    summary?: string | undefined;
+export class UserHabitsDto implements IUserHabitsDto {
+    habitLists?: HabitListDto[];
 
-    constructor(data?: IWeatherForecast) {
+    constructor(data?: IUserHabitsDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -126,48 +333,470 @@ export class WeatherForecast implements IWeatherForecast {
 
     init(_data?: any) {
         if (_data) {
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.temperatureC = _data["temperatureC"];
-            this.temperatureF = _data["temperatureF"];
-            this.summary = _data["summary"];
+            if (Array.isArray(_data["habitLists"])) {
+                this.habitLists = [] as any;
+                for (let item of _data["habitLists"])
+                    this.habitLists!.push(HabitListDto.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): WeatherForecast {
+    static fromJS(data: any): UserHabitsDto {
         data = typeof data === 'object' ? data : {};
-        let result = new WeatherForecast();
+        let result = new UserHabitsDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["date"] = this.date ? formatDate(this.date) : <any>undefined;
-        data["temperatureC"] = this.temperatureC;
-        data["temperatureF"] = this.temperatureF;
-        data["summary"] = this.summary;
+        if (Array.isArray(this.habitLists)) {
+            data["habitLists"] = [];
+            for (let item of this.habitLists)
+                data["habitLists"].push(item.toJSON());
+        }
         return data;
     }
 }
 
-export interface IWeatherForecast {
-    date?: Date;
-    temperatureC?: number;
-    temperatureF?: number;
-    summary?: string | undefined;
+export interface IUserHabitsDto {
+    habitLists?: HabitListDto[];
 }
 
-function formatDate(d: Date) {
-    return d.getFullYear() + '-' + 
-        (d.getMonth() < 9 ? ('0' + (d.getMonth()+1)) : (d.getMonth()+1)) + '-' +
-        (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate());
+export class HabitListDto implements IHabitListDto {
+    id?: number;
+    title?: string;
+    habits?: HabitDto[];
+
+    constructor(data?: IHabitListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            if (Array.isArray(_data["habits"])) {
+                this.habits = [] as any;
+                for (let item of _data["habits"])
+                    this.habits!.push(HabitDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): HabitListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new HabitListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        if (Array.isArray(this.habits)) {
+            data["habits"] = [];
+            for (let item of this.habits)
+                data["habits"].push(item.toJSON());
+        }
+        return data;
+    }
 }
 
-export interface FileResponse {
-    data: Blob;
-    status: number;
-    fileName?: string;
-    headers?: { [name: string]: any };
+export interface IHabitListDto {
+    id?: number;
+    title?: string;
+    habits?: HabitDto[];
+}
+
+export class HabitDto implements IHabitDto {
+    title?: string | undefined;
+    note?: string | undefined;
+    reminder?: Date | undefined;
+    listId?: number;
+
+    constructor(data?: IHabitDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.note = _data["note"];
+            this.reminder = _data["reminder"] ? new Date(_data["reminder"].toString()) : <any>undefined;
+            this.listId = _data["listId"];
+        }
+    }
+
+    static fromJS(data: any): HabitDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new HabitDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["note"] = this.note;
+        data["reminder"] = this.reminder ? this.reminder.toISOString() : <any>undefined;
+        data["listId"] = this.listId;
+        return data;
+    }
+}
+
+export interface IHabitDto {
+    title?: string | undefined;
+    note?: string | undefined;
+    reminder?: Date | undefined;
+    listId?: number;
+}
+
+export class HabitList implements IHabitList {
+    id?: number;
+    title?: string | undefined;
+    userId?: string;
+    habits?: Habit[];
+
+    constructor(data?: IHabitList) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.userId = _data["userId"];
+            if (Array.isArray(_data["habits"])) {
+                this.habits = [] as any;
+                for (let item of _data["habits"])
+                    this.habits!.push(Habit.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): HabitList {
+        data = typeof data === 'object' ? data : {};
+        let result = new HabitList();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["userId"] = this.userId;
+        if (Array.isArray(this.habits)) {
+            data["habits"] = [];
+            for (let item of this.habits)
+                data["habits"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IHabitList {
+    id?: number;
+    title?: string | undefined;
+    userId?: string;
+    habits?: Habit[];
+}
+
+export class Habit implements IHabit {
+    id?: number;
+    title?: string | undefined;
+    note?: string | undefined;
+    reminder?: Date | undefined;
+    habitListId?: number;
+
+    constructor(data?: IHabit) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.note = _data["note"];
+            this.reminder = _data["reminder"] ? new Date(_data["reminder"].toString()) : <any>undefined;
+            this.habitListId = _data["habitListId"];
+        }
+    }
+
+    static fromJS(data: any): Habit {
+        data = typeof data === 'object' ? data : {};
+        let result = new Habit();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["note"] = this.note;
+        data["reminder"] = this.reminder ? this.reminder.toISOString() : <any>undefined;
+        data["habitListId"] = this.habitListId;
+        return data;
+    }
+}
+
+export interface IHabit {
+    id?: number;
+    title?: string | undefined;
+    note?: string | undefined;
+    reminder?: Date | undefined;
+    habitListId?: number;
+}
+
+export class NewListCommand implements INewListCommand {
+    userId?: string;
+    habitList?: HabitList;
+
+    constructor(data?: INewListCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.habitList = _data["habitList"] ? HabitList.fromJS(_data["habitList"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): NewListCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new NewListCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["habitList"] = this.habitList ? this.habitList.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface INewListCommand {
+    userId?: string;
+    habitList?: HabitList;
+}
+
+export class NewHabitCommand implements INewHabitCommand {
+    listId?: number;
+    title?: string;
+    note?: string;
+
+    constructor(data?: INewHabitCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.listId = _data["listId"];
+            this.title = _data["title"];
+            this.note = _data["note"];
+        }
+    }
+
+    static fromJS(data: any): NewHabitCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new NewHabitCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["listId"] = this.listId;
+        data["title"] = this.title;
+        data["note"] = this.note;
+        return data;
+    }
+}
+
+export interface INewHabitCommand {
+    listId?: number;
+    title?: string;
+    note?: string;
+}
+
+export class UpdateHabitCommand implements IUpdateHabitCommand {
+    habit?: Habit;
+
+    constructor(data?: IUpdateHabitCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.habit = _data["habit"] ? Habit.fromJS(_data["habit"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UpdateHabitCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateHabitCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["habit"] = this.habit ? this.habit.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUpdateHabitCommand {
+    habit?: Habit;
+}
+
+export class DeleteHabitCommand implements IDeleteHabitCommand {
+    habitId?: number;
+
+    constructor(data?: IDeleteHabitCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.habitId = _data["habitId"];
+        }
+    }
+
+    static fromJS(data: any): DeleteHabitCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteHabitCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["habitId"] = this.habitId;
+        return data;
+    }
+}
+
+export interface IDeleteHabitCommand {
+    habitId?: number;
+}
+
+export class DeleteListCommand implements IDeleteListCommand {
+    listId?: number;
+
+    constructor(data?: IDeleteListCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.listId = _data["listId"];
+        }
+    }
+
+    static fromJS(data: any): DeleteListCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteListCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["listId"] = this.listId;
+        return data;
+    }
+}
+
+export interface IDeleteListCommand {
+    listId?: number;
+}
+
+export class UpdateListCommand implements IUpdateListCommand {
+    habitList?: HabitList;
+
+    constructor(data?: IUpdateListCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.habitList = _data["habitList"] ? HabitList.fromJS(_data["habitList"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UpdateListCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateListCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["habitList"] = this.habitList ? this.habitList.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUpdateListCommand {
+    habitList?: HabitList;
 }
 
 export class ApiException extends Error {

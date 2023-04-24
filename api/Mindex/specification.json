@@ -6,20 +6,31 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Habits": {
+    "/api/Habits/{userId}": {
       "get": {
         "tags": [
           "Habits"
         ],
-        "operationId": "Habits_Hey",
+        "operationId": "Habits_GetUserHabits",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/UserHabitsDto"
                 }
               }
             }
@@ -27,22 +38,263 @@
         }
       }
     },
-    "/WeatherForecast": {
-      "get": {
+    "/api/Habits/{userId}/newList": {
+      "post": {
         "tags": [
-          "WeatherForecast"
+          "Habits"
         ],
-        "operationId": "WeatherForecast_Get",
+        "operationId": "Habits_CreateHabitList",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewListCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
+                  "$ref": "#/components/schemas/HabitList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Habits/{userId}/newHabit": {
+      "post": {
+        "tags": [
+          "Habits"
+        ],
+        "operationId": "Habits_CreateHabit",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewHabitCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Habit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Habits/{userId}/updateHabit": {
+      "put": {
+        "tags": [
+          "Habits"
+        ],
+        "operationId": "Habits_UpdateHabit",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateHabitCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Habit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Habits/{userId}/deleteHabit": {
+      "delete": {
+        "tags": [
+          "Habits"
+        ],
+        "operationId": "Habits_DeleteHabit",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteHabitCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Habit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Habits/{userId}/deleteList": {
+      "delete": {
+        "tags": [
+          "Habits"
+        ],
+        "operationId": "Habits_DeleteHabitList",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteListCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HabitList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Habits/{userId}/updateList": {
+      "put": {
+        "tags": [
+          "Habits"
+        ],
+        "operationId": "Habits_UpdateHabitList",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateListCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HabitList"
                 }
               }
             }
@@ -53,25 +305,175 @@
   },
   "components": {
     "schemas": {
-      "WeatherForecast": {
+      "UserHabitsDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "date": {
-            "type": "string",
-            "format": "date"
-          },
-          "temperatureC": {
+          "habitLists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HabitListDto"
+            }
+          }
+        }
+      },
+      "HabitListDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32"
+          "title": {
+            "type": "string"
           },
-          "summary": {
+          "habits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HabitDto"
+            }
+          }
+        }
+      },
+      "HabitDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
             "type": "string",
             "nullable": true
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "reminder": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "listId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "HabitList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "habits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Habit"
+            }
+          }
+        }
+      },
+      "Habit": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "reminder": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "habitListId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "NewListCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "habitList": {
+            "$ref": "#/components/schemas/HabitList"
+          }
+        }
+      },
+      "NewHabitCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "listId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateHabitCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "habit": {
+            "$ref": "#/components/schemas/Habit"
+          }
+        }
+      },
+      "DeleteHabitCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "habitId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "DeleteListCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "listId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateListCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "habitList": {
+            "$ref": "#/components/schemas/HabitList"
           }
         }
       }
