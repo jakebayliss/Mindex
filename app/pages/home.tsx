@@ -6,6 +6,7 @@ import Calendar from '@/components/Calendar'
 import Header from '@/components/Header';
 import { NewHabitCommand } from '../api-client';
 import { useMsal } from '@azure/msal-react';
+import LineChartComponent from '@/components/Chart';
 
 const HomePage = () => {
   const { accounts } = useMsal();
@@ -65,43 +66,44 @@ const HomePage = () => {
   return (
     <>
         <Header />
-        <main className="flex min-h-screen flex-row justify-center gap-10 p-24">
-          <div className="max-w-5xl items-center justify-center font-mono text-sm">
+        <main className="flex flex-wrap flex-row justify-center gap-10 p-10" style={{minHeight: 'calc(100vh - 56px)'}}>
+          <div className="max-w-5xl items-center justify-center font-mono text-sm w-1/3 h-1/3">
             <Calendar onDateClick={(clickedDate) => handleDateClick(clickedDate)} />
             <h4 className='text-center py-2'>{selectedDate?.toDateString()}</h4>
           </div>
-          <div>
-            {habitLists && habitLists.length > 0 && (
-              habitLists.map((list) => 
-                <div>
-                  <h2>{list.title}</h2>
-                  <ul>
+          <div className="bg-white rounded-lg shadow-md p-4 w-1/3 h-1/3">
+            {habitLists && habitLists.length > 0 ? (
+              habitLists.map((list) => (
+                <div key={list.id} className="mb-4">
+                  <ul className="list-disc pl-4">
                     {list.habits && list.habits.length > 0 && (
-                      list.habits.map((habit, i) =>
-                        <li key={i}>{habit.title}</li>
-                    ))}
+                      list.habits.map((habit, i) => (
+                        <li key={i} className="mb-1">{habit.title}</li>
+                      ))
+                    )}
                   </ul>
-                  <div className='flex'>
-                    <input type="text" value={newHabitText} onChange={(e) => setNewHabitText(e.target.value)}/>
-                    <button onClick={() => handleNewHabit(list.id)}>Add</button>
+                  <div className="flex items-center mt-2">
+                    <input
+                      type="text"
+                      value={newHabitText}
+                      onChange={(e) => setNewHabitText(e.target.value)}
+                      placeholder="Add new habit"
+                      className="bg-gray-100 rounded-md py-1 px-2 mr-2 w-full"
+                    />
+                    <button
+                      onClick={() => handleNewHabit(list.id)}
+                      className="bg-green-500 hover:bg-green-600 text-white rounded-md py-1 px-4"
+                    >
+                      Add
+                    </button>
+                  </div>
                 </div>
-                </div>
-              )
+              ))
+            ) : (
+              <p>No habits found.</p>
             )}
-            {!addingNewList && (
-              <button className='bg-teal-600 px-4 py-1 rounded-sm hover:shadow-inner hover:bg-teal-700' 
-                onClick={() => setAddingNewList(!addingNewList)}>New List</button>
-            )}
-            {addingNewList && (
-                <div className='flex'>
-                  <input type="text" value={newListText} onChange={(e) => setNewListText(e.target.value)}/>
-                  <button className='bg-teal-600 px-4 py-1 rounded-sm hover:shadow-inner hover:bg-teal-700' 
-                    onClick={() => handleNewList()}>Add</button>
-                  <button className='bg-amber-600 px-4 py-1 rounded-sm hover:shadow-inner hover:bg-amber-700' 
-                    onClick={() => setAddingNewList(false)}>x</button>
-                </div>
-              )}
           </div>
+          <LineChartComponent />
         </main>
     </>
   )
