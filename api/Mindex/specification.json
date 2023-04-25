@@ -301,6 +301,95 @@
           }
         }
       }
+    },
+    "/api/Habits/{userId}/completions/{days}": {
+      "get": {
+        "tags": [
+          "Habits"
+        ],
+        "operationId": "Habits_GetCompletions",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "days",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompletionDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Habits/{userId}/complete": {
+      "post": {
+        "tags": [
+          "Habits"
+        ],
+        "operationId": "Habits_CompleteHabit",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteHabitCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompletionDto"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -344,6 +433,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "title": {
             "type": "string",
             "nullable": true
@@ -491,6 +584,34 @@
         "properties": {
           "habitList": {
             "$ref": "#/components/schemas/HabitList"
+          }
+        }
+      },
+      "CompletionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "habitId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completedOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CompleteHabitCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "habitId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }

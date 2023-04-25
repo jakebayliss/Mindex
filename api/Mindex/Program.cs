@@ -6,9 +6,9 @@ builder.Services.AddControllers();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
-builder.Services.AddOpenApiDocument(configure =>
+builder.Services.AddOpenApiDocument(options =>
 {
-	configure.Title = "Mindex API";
+	options.Title = "Mindex API";
 });
 
 builder.Services.AddCors(options =>

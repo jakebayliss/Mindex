@@ -23,6 +23,10 @@ export interface IHabitsClient {
     deleteHabitList(userId: string | null, command: DeleteListCommand): Promise<HabitList>;
 
     updateHabitList(userId: string | null, command: UpdateListCommand): Promise<HabitList>;
+
+    getCompletions(userId: string | null, days: number): Promise<CompletionDto[]>;
+
+    completeHabit(userId: string | null, command: CompleteHabitCommand): Promise<CompletionDto>;
 }
 
 export class HabitsClient implements IHabitsClient {
@@ -317,6 +321,94 @@ export class HabitsClient implements IHabitsClient {
         }
         return Promise.resolve<HabitList>(null as any);
     }
+
+    getCompletions(userId: string | null, days: number): Promise<CompletionDto[]> {
+        let url_ = this.baseUrl + "/api/Habits/{userId}/completions/{days}";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        if (days === undefined || days === null)
+            throw new Error("The parameter 'days' must be defined.");
+        url_ = url_.replace("{days}", encodeURIComponent("" + days));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetCompletions(_response);
+        });
+    }
+
+    protected processGetCompletions(response: Response): Promise<CompletionDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CompletionDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CompletionDto[]>(null as any);
+    }
+
+    completeHabit(userId: string | null, command: CompleteHabitCommand): Promise<CompletionDto> {
+        let url_ = this.baseUrl + "/api/Habits/{userId}/complete";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCompleteHabit(_response);
+        });
+    }
+
+    protected processCompleteHabit(response: Response): Promise<CompletionDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CompletionDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CompletionDto>(null as any);
+    }
 }
 
 export class UserHabitsDto implements IUserHabitsDto {
@@ -420,6 +512,7 @@ export interface IHabitListDto {
 }
 
 export class HabitDto implements IHabitDto {
+    id?: number;
     title?: string | undefined;
     note?: string | undefined;
     createdOn?: Date;
@@ -437,6 +530,7 @@ export class HabitDto implements IHabitDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.title = _data["title"];
             this.note = _data["note"];
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
@@ -454,6 +548,7 @@ export class HabitDto implements IHabitDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["title"] = this.title;
         data["note"] = this.note;
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
@@ -464,6 +559,7 @@ export class HabitDto implements IHabitDto {
 }
 
 export interface IHabitDto {
+    id?: number;
     title?: string | undefined;
     note?: string | undefined;
     createdOn?: Date;
@@ -813,6 +909,86 @@ export class UpdateListCommand implements IUpdateListCommand {
 
 export interface IUpdateListCommand {
     habitList?: HabitList;
+}
+
+export class CompletionDto implements ICompletionDto {
+    habitId?: number;
+    completedOn?: Date;
+
+    constructor(data?: ICompletionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.habitId = _data["habitId"];
+            this.completedOn = _data["completedOn"] ? new Date(_data["completedOn"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CompletionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CompletionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["habitId"] = this.habitId;
+        data["completedOn"] = this.completedOn ? this.completedOn.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ICompletionDto {
+    habitId?: number;
+    completedOn?: Date;
+}
+
+export class CompleteHabitCommand implements ICompleteHabitCommand {
+    habitId?: number;
+    date?: Date;
+
+    constructor(data?: ICompleteHabitCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.habitId = _data["habitId"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CompleteHabitCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CompleteHabitCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["habitId"] = this.habitId;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ICompleteHabitCommand {
+    habitId?: number;
+    date?: Date;
 }
 
 export class ApiException extends Error {

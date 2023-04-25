@@ -24,6 +24,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     public DbSet<HabitList> HabitLists => Set<HabitList>();
     public DbSet<Habit> Habits => Set<Habit>();
+    public DbSet<Completion> Completions => Set<Completion>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

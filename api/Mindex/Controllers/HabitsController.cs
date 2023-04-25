@@ -1,4 +1,6 @@
-﻿using Application.Habits.Commands.DeleteHabit;
+﻿using Application.Completions.Queries.GetCompletions;
+using Application.Habits.Commands.CompleteHabit;
+using Application.Habits.Commands.DeleteHabit;
 using Application.Habits.Commands.DeleteList;
 using Application.Habits.Commands.NewHabit;
 using Application.Habits.Commands.NewList;
@@ -69,6 +71,20 @@ namespace Mindex.Controllers
 		{
 			var updatedList = await _mediator.Send(command);
 			return Ok(updatedList);
+		}
+
+		[HttpGet("{userId}/completions/{days}")]
+		public async Task<ActionResult<IEnumerable<CompletionDto>>> GetCompletions(string userId, int days)
+		{
+			var userCompletions = await _mediator.Send(new GetCompletionsQuery { UserId = Guid.Parse(userId), Days = days });
+			return Ok(userCompletions);
+		}
+
+		[HttpPost("{userId}/complete")]
+		public async Task<ActionResult<CompletionDto>> CompleteHabit(string userId, CompleteHabitCommand command)
+		{
+			var completed = await _mediator.Send(command);
+			return Ok(completed);
 		}
 	}
 }

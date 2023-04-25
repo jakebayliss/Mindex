@@ -43,12 +43,13 @@ namespace Application.Habits.Commands.NewHabit
 				CreatedOn = list.CreatedOn,
 				Habits = list.Habits.Select(x => new HabitDto
 				{
+					Id = x.Id,
 					Title = x.Title,
 					Note = x.Note,
 					Reminder = x.Reminder,
 					CreatedOn = x.CreatedOn,
 					ListId = x.HabitListId
-				}).ToList()
+				}).OrderBy(x => x.CreatedOn).ToList()
 			};
 		}
 	}

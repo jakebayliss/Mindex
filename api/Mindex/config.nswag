@@ -49,7 +49,7 @@
       "aspNetCoreEnvironment": null,
       "createWebHostBuilderMethod": null,
       "startupType": null,
-      "allowNullableBodyParameters": true,
+      "allowNullableBodyParameters": false,
       "useHttpAttributeNameAsOperationId": false,
       "output": "specification.json",
       "outputType": "Swagger2",

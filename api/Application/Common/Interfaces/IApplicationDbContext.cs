@@ -8,6 +8,7 @@ public interface IApplicationDbContext
 	DbSet<HabitList> HabitLists { get; }
 
 	DbSet<Habit> Habits { get; }
+	DbSet<Completion> Completions { get; }
 
 	Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

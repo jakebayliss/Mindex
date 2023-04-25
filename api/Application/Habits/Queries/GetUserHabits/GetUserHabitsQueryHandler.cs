@@ -31,11 +31,12 @@ public class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQuery, Use
 				Title = x.Title,
 				Habits = x.Habits.Select(y => new HabitDto
 				{
+					Id = y.Id,
 					Title = y.Title,
 					Note = y.Note,
 					Reminder = y.Reminder,
 					ListId = x.Id
-				}).ToList()
+				}).OrderBy(x => x.CreatedOn).ToList()
 			}) 
 		};
 	}
