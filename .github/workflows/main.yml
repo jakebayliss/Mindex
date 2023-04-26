@@ -50,7 +50,7 @@ jobs:
       - name: Build Api
         shell: pwsh
         run: |
-          pushd './.'
+          pushd './api/Mindex'
           dotnet build --configuration Release --output ./api
           popd
       
@@ -73,15 +73,15 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          cache-dependency-path: './site/package-lock.json'
+          cache-dependency-path: './app/package-lock.json'
           
       - name: Install dependencies
         run: npm ci
-        working-directory: ./site
+        working-directory: ./app
         
       - name: npm build
         run: npm run build --if-present
-        working-directory: ./site
+        working-directory: ./app
 
       - name: Upload Artifact - App
         uses: actions/upload-artifact@v3

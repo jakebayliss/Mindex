@@ -65,10 +65,10 @@ resource plan 'Microsoft.Web/serverfarms@2020-12-01' = {
 }
 
 module webapi 'appservice-api.bicep' = {
-  name: '${environmentName}-${projectName}-app'
+  name: '${environmentName}-${projectName}-api'
   scope: resourceGroup()
   params: {
-    appName: '${environmentName}-${projectName}-app'
+    appName: '${environmentName}-${projectName}-api'
     planId: plan.id
     appInsightsInstrumentationKey: appInsights.outputs.settings.instrumentationKey
     location: location
