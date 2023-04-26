@@ -45,7 +45,7 @@ module sql 'sql.bicep' = {
   name: '${environmentName}-${projectName}-sql'
   scope: resourceGroup()
   params: {
-    sqlServerName: '${environmentName}-${projectName}'
+    sqlServerName: '${environmentName}-${projectName}-sql'
     sqlAdministratorLogin: sqlAdministratorLogin
     sqlAdministratorLoginPassword: sqlAdministratorLoginPassword
     location: location
