@@ -2,7 +2,7 @@
 @minLength(3)
 @maxLength(21)
 @description('Name of this project')
-param projectName string = 'autumn'
+param projectName string = 'mindex'
 
 // environment name like dev, staging, prod
 @allowed([
