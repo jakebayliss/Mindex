@@ -6,7 +6,7 @@ on:
 
 env:
   DOTNET_VERSION: 7.0.x
-  NODE_VERSION: 14.x
+  NODE_VERSION: latest
   devResourceGroup: mindex-dev
 
 jobs:
