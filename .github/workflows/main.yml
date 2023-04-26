@@ -116,7 +116,7 @@ jobs:
       - name: Deploy Api
         uses: azure/webapps-deploy@v2
         with: 
-          app-name: ${{ env.devResourceGroup }}-api
+          app-name: 'dev-mindex-api'
           package: .
 
       - name: Download Artifact - App
@@ -127,5 +127,5 @@ jobs:
       - name: Deploy App
         uses: azure/webapps-deploy@v2
         with: 
-          app-name: ${{ env.devResourceGroup }}-app
+          app-name: 'dev-mindex-app'
           package: .
