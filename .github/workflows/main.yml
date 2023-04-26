@@ -87,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app
-          path: ./site/dist
+          path: ./app/.next
           if-no-files-found: error
 
   deployDev:
