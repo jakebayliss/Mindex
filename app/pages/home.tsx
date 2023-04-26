@@ -45,7 +45,7 @@ const HomePage = () => {
     if (clickedDate) {
       setSelectedDate(clickedDate);
       if(habitLists && habitLists[0] && habitLists[0].habits){
-        var filteredHabits = habitLists[0].habits.filter(x => x.createdOn && x.createdOn.toDateString() >= clickedDate.toDateString());
+        var filteredHabits = habitLists[0].habits.filter(x => x.createdOn && x.createdOn >= clickedDate);
       }
     }
   }
