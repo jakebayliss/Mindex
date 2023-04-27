@@ -57,7 +57,7 @@ jobs:
       - name: ls
         run: |
           cd ../..
-          ls
+          ls -r
       
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
