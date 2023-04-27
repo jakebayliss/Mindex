@@ -51,14 +51,14 @@ jobs:
         shell: pwsh
         run: |
           pushd './api/Mindex'
-          dotnet build --configuration Release --output ./api
+          dotnet build --configuration Release --output ./build-api
           popd
       
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
         with:
           name: api
-          path: ./api
+          path: ./build-api
           if-no-files-found: error
   
   buildApp:
@@ -117,7 +117,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-api'
-          package: ./api
+          package: .
 
       - name: Download Artifact - App
         uses: actions/download-artifact@v3
@@ -128,4 +128,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-app'
-          package: ./app
+          package: .
