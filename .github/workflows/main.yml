@@ -53,6 +53,10 @@ jobs:
           dotnet restore
           dotnet build --configuration Release
           dotnet publish -c Release --property:PublishDir='./build/api'
+
+      - name: ls
+        run: |
+          ls
       
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
