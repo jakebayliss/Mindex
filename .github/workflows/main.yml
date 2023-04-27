@@ -117,7 +117,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-api'
-          package: .
+          package: ./api
 
       - name: Download Artifact - App
         uses: actions/download-artifact@v3
@@ -128,4 +128,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-app'
-          package: .
+          package: ./app
