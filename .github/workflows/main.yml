@@ -52,10 +52,11 @@ jobs:
           pushd './api/Mindex'
           dotnet restore
           dotnet build --configuration Release
-          dotnet publish -c Release --property:PublishDir='./build/api'
+          dotnet publish -c Release --property:PublishDir='../../build/api'
 
       - name: ls
         run: |
+          cd ../..
           ls
       
       - name: Upload Artifact - Api
