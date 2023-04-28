@@ -54,8 +54,8 @@ jobs:
           dotnet build --configuration Release --output ../build
           popd
       
-      - uses: montudor/action-zip@v1
       - name: zip build
+        uses: montudor/action-zip@v1
         with:
           args: zip -qq -r api.zip ./api/build
 
@@ -88,8 +88,8 @@ jobs:
         run: npm run build --if-present
         working-directory: ./app
 
-      - uses: montudor/action-zip@v1
       - name: zip build
+        uses: montudor/action-zip@v1
         with:
           args: zip -qq -r app.zip ./app/.next
 
@@ -123,8 +123,8 @@ jobs:
         with:
           name: api-drop
 
-      - uses: montudor/action-zip@v1
       - name: unzip api
+        uses: montudor/action-zip@v1
         with:
           args: unzip -qq api.zip -d ./api-drop
 
@@ -143,8 +143,8 @@ jobs:
         with:
           name: app-drop
 
-      - uses: montudor/action-zip@v1
       - name: unzip app
+        uses: montudor/action-zip@v1
         with:
           args: unzip -qq app.zip -d ./app-drop
 
