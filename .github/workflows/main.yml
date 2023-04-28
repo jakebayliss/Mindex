@@ -128,7 +128,7 @@ jobs:
         with:
           args: unzip -qq api.zip -d ./api-drop
 
-      - name:
+      - name: list files
         run: |
           ls -r
       
@@ -148,7 +148,7 @@ jobs:
         with:
           args: unzip -qq app.zip -d ./app-drop
 
-      - name:
+      - name: list files
         run: |
           ls -r
 
