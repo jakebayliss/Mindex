@@ -53,13 +53,17 @@ jobs:
           dotnet restore
           dotnet build --configuration Release
           dotnet publish -c Release --property:PublishDir='../build/api'
+          popd
 
-      
+      - name:
+        run: |
+          ls -r
+
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
         with:
           name: api
-          path: ./../build/api
+          path: ./build/api
           if-no-files-found: error
   
   buildApp:
