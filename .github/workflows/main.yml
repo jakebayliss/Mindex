@@ -47,23 +47,18 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: dotnet build and publish
+      - name: Build Api
+        shell: pwsh
         run: |
-          cd ./api/Mindex
-          dotnet restore
-          dotnet build --configuration Release
-          dotnet publish -c Release --property:PublishDir='../build'
-
-      - name:
-        run: |
-          cd ..
-          ls -r
-
+          pushd './api/Mindex'
+          dotnet build --configuration Release --output ./build
+          popd
+      
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
         with:
           name: api
-          path: ./Mindex/api/build
+          path: ./build
           if-no-files-found: error
   
   buildApp:
