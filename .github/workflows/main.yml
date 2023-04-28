@@ -53,6 +53,10 @@ jobs:
           pushd './api/Mindex'
           dotnet build --configuration Release --output ../build
           popd
+
+      - name: list files
+        run: |
+          ls -r
       
       - name: zip api
         run: |
