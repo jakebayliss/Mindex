@@ -54,6 +54,10 @@ jobs:
           dotnet build --configuration Release --output ./build
           popd
       
+      - name:
+        run: |
+        ls -r
+
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
         with:
