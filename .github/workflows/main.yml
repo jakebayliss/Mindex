@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: api
-          path: ./build
+          path: ./Mindex/api/build
           if-no-files-found: error
   
   buildApp:
