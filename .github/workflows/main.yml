@@ -112,6 +112,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: api-drop
+
+      - name:
+        run: |
+          ls -r
       
       - name: Deploy Api
         uses: azure/webapps-deploy@v2
