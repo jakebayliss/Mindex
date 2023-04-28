@@ -60,7 +60,7 @@ jobs:
       
       - name: zip api
         run: |
-          Compress-Archive -Path ../build -DestinationPath ./api.zip
+          Compress-Archive -Path ./api/build -DestinationPath ./api.zip
 
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
