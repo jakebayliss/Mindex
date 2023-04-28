@@ -49,21 +49,20 @@ jobs:
 
       - name: dotnet build and publish
         run: |
-          pushd './api/Mindex'
           dotnet restore
           dotnet build --configuration Release
-          dotnet publish -c Release --property:PublishDir='../build/api'
-          popd
+          dotnet publish -c Release --property:PublishDir='../build'
 
       - name:
         run: |
-          ls -r
+          cd ..
+          ls
 
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
         with:
           name: api
-          path: ./build/api
+          path: ./build
           if-no-files-found: error
   
   buildApp:
