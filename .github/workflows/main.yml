@@ -11,7 +11,7 @@ env:
 
 jobs:
   buildIAC:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: 'Build IAC'
     steps:
       - name: Checkout
