@@ -49,6 +49,7 @@ jobs:
 
       - name: dotnet build and publish
         run: |
+          cd ./api/Mindex
           dotnet restore
           dotnet build --configuration Release
           dotnet publish -c Release --property:PublishDir='../build'
