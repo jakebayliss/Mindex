@@ -53,24 +53,16 @@ jobs:
           pushd './api/Mindex'
           dotnet build --configuration Release --output ../build
           popd
-
-      - name: list files
-        run: |
-          ls -r
       
       - name: zip api
         run: |
           Compress-Archive -Path ./api/build -DestinationPath ./api.zip
-      
-      - name: list files
-        run: |
-          ls -r
 
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
         with:
           name: api-drop
-          path: ./aip.zip
+          path: ./api.zip
           if-no-files-found: error
   
   buildApp:
