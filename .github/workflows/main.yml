@@ -57,7 +57,7 @@ jobs:
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
         with:
-          name: api
+          name: api-drop
           path: ./api/build
           if-no-files-found: error
   
@@ -86,7 +86,7 @@ jobs:
       - name: Upload Artifact - App
         uses: actions/upload-artifact@v3
         with:
-          name: app
+          name: app-drop
           path: ./app/.next
           if-no-files-found: error
 
@@ -95,6 +95,9 @@ jobs:
     name: 'Deploy - Dev'
     needs: [buildIAC,buildApi,buildApp]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Azure Login
         uses: Azure/login@v1
         with:
@@ -108,21 +111,21 @@ jobs:
       - name: Download Artifact - Api
         uses: actions/download-artifact@v3
         with:
-          name: api
+          name: api-drop
       
       - name: Deploy Api
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-api'
-          package: api
+          package: api-drop
 
       - name: Download Artifact - App
         uses: actions/download-artifact@v3
         with:
-          name: app
+          name: app-drop
 
       - name: Deploy App
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-app'
-          package: app
+          package: app-drop
