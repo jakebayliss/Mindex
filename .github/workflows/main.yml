@@ -57,7 +57,7 @@ jobs:
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
         with:
-          name: api-drop
+          name: ./api-drop
           path: ./api/build
           if-no-files-found: error
   
@@ -86,7 +86,7 @@ jobs:
       - name: Upload Artifact - App
         uses: actions/upload-artifact@v3
         with:
-          name: app-drop
+          name: ./app-drop
           path: ./app/.next
           if-no-files-found: error
 
