@@ -53,10 +53,6 @@ jobs:
           pushd './api/Mindex'
           dotnet build --configuration Release --output ../build
           popd
-      
-      - name:
-        run: |
-          ls -r
 
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
@@ -87,6 +83,10 @@ jobs:
         run: npm run build --if-present
         working-directory: ./app
 
+      - name:
+        run: |
+          ls -r
+          
       - name: Upload Artifact - App
         uses: actions/upload-artifact@v3
         with:
