@@ -51,7 +51,7 @@ jobs:
         shell: pwsh
         run: |
           pushd './api/Mindex'
-          dotnet build --configuration Release --output ./build
+          dotnet build --configuration Release --output ../build
           popd
       
       - name:
@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: api
-          path: ./build
+          path: ./api/build
           if-no-files-found: error
   
   buildApp:
