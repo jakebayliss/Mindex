@@ -2,19 +2,19 @@ import { LogLevel } from "@azure/msal-browser";
 
 export const b2cPolicies = {
     names: {
-        signUpSignIn: "B2C_1_signupsignin"
+        signUpSignIn: "B2C_1_signup_signin"
     },
     authorities: {
         signUpSignIn: {
-            authority: "https://cryptohunt.b2clogin.com/cryptohunt.onmicrosoft.com/B2C_1_signupsignin",
+            authority: "https://mindexb2c.b2clogin.com/mindexb2c.onmicrosoft.com/B2C_1_signup_signin",
         },
     },
-    authorityDomain: "cryptohunt.b2clogin.com"
+    authorityDomain: "mindexb2c.b2clogin.com"
 }
 
 export const msalConfig = {
     auth: {
-        clientId: "d6502199-0673-4562-9e88-94c9fc188ae2", 
+        clientId: "7a4b572c-6712-4cc3-9229-12fdd3b9a903", 
         authority: b2cPolicies.authorities.signUpSignIn.authority, 
         knownAuthorities: [b2cPolicies.authorityDomain], 
         redirectUri: "/",
@@ -53,5 +53,5 @@ export const msalConfig = {
 };
 
 export const loginRequest = {
-    scopes: ["https://cryptohunt.onmicrosoft.com/hunter-api/hunter.read"]
+    scopes: ["https://mindexb2c.onmicrosoft.com/api/read"]
 };
