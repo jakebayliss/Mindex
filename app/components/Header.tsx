@@ -4,7 +4,7 @@ import { User, UserContext } from '../auth/UserContext';
 import { loginRequest } from '../auth/authConfig';
 
 const HeaderLeft = () => <h2 className='text-2xl flex align-middle'>
-    Autumn
+    Mindex
 </h2>
 
 const Header = () => {
@@ -12,7 +12,7 @@ const Header = () => {
     const { accounts } = useMsal();
     const { user, setUser } = useContext<User>(UserContext);
 
-    return <div className='flex justify-between align-middle p-3 text-white bg-zinc-800'>
+    return <div className='flex justify-between align-middle py-3 px-10 text-white bg-zinc-800'>
         <UnauthenticatedTemplate>
             <HeaderLeft />
             <button className='bg-amber-600 px-4 py-1 rounded-sm hover:shadow-inner hover:shadow-amber-700' 
@@ -22,8 +22,8 @@ const Header = () => {
         </UnauthenticatedTemplate>
         <AuthenticatedTemplate>
             <HeaderLeft />
-            <div style={{display: 'flex', alignItems: 'center', marginRight: '20px'}}>
-                <p style={{margin: '0 20px'}}>Hello {accounts[0]?.idTokenClaims?.given_name as string}!</p>
+            <div className='flex items-center gap-5'>
+                <p>Hello {accounts[0]?.name as string}!</p>
                 <button className='bg-amber-600 px-4 py-1 rounded-sm hover:shadow-inner hover:shadow-amber-700' 
                     onClick={() => instance.logoutRedirect({ postLogoutRedirectUri: "/" }).then((x) => setUser(null))}>
                     Logout

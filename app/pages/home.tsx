@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { CompleteHabitCommand, CompletionDto, HabitListDto, HabitsClient, NewListCommand } from '../api-client';
+import { CompleteHabitCommand, CompletionDto, HabitListDto, HabitsClient, NewListCommand, NewHabitCommand } from '../api-client';
+import { useMsal } from '@azure/msal-react';
 import { BASE_API_URL } from '../config';
 
+import Link from 'next/link';
 import Calendar from '@/components/Calendar'
-import Header from '@/components/Header';
-import { NewHabitCommand } from '../api-client';
-import { useMsal } from '@azure/msal-react';
 import LineChartComponent from '@/components/Chart';
 
 const HomePage = () => {
@@ -89,49 +88,39 @@ const HomePage = () => {
   }
 
   return (
-    <>
-        <Header />
-        <main className="flex flex-wrap flex-row justify-center gap-10 p-10" style={{minHeight: 'calc(100vh - 56px)'}}>
-          <div className="max-w-5xl items-center justify-center font-mono text-sm w-1/3 h-1/3">
-            <Calendar onDateClick={(clickedDate) => handleDateClick(clickedDate)} />
-            <h4 className='text-center py-2'>{selectedDate?.toDateString()}</h4>
-          </div>
-          <div className="p-4 w-1/3 h-1/3">
-            {habitLists && habitLists.length > 0 ? (
-              habitLists.map((list) => (
-                <div key={list.id}>
-                  <ul>
-                    {list.habits && list.habits.length > 0 && (
-                      list.habits.map((habit, i) => (
-                        <li key={i} className="flex justify-between">
-                          <span>
-                            {habit.title}
-                          </span>
-                          <button onClick={() => handleHabitCompletion(selectedDate, habit.id)}>{isHabitCompleted(selectedDate, habit.id) ? '☑️' : '🔲'}</button>
-                        </li>
-                      ))
-                    )}
-                  </ul>
-                  <div className="flex items-center mt-2">
-                    <input type="text" value={newHabitText} onChange={(e) => setNewHabitText(e.target.value)}
-                      placeholder="Add new habit"
-                      className="bg-gray-100 rounded-md py-1 px-2 mr-2 w-full"
-                    />
-                    <button onClick={() => handleNewHabit(list.id)}
-                      className="bg-teal-700 hover:bg-teal-800 text-white rounded-md py-1 px-4"
-                    >
-                      Add
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No habits found.</p>
-            )}
-          </div>
-          <LineChartComponent completionData={completions} />
-        </main>
-    </>
+    <main className="flex flex-wrap flex-row justify-center gap-10 p-10" style={{minHeight: 'calc(100vh - 56px)'}}>
+      <div className="max-w-5xl items-center justify-center font-mono text-sm w-1/3 h-1/3">
+        <Calendar onDateClick={(clickedDate) => handleDateClick(clickedDate)} />
+        <h4 className='text-center py-2'>{selectedDate?.toDateString()}</h4>
+      </div>
+      <div className="flex gap-10 w-1/2 h-1/3">
+        {habitLists && habitLists.length > 0 ? (
+          habitLists.map((list) => (
+            <div key={list.id} className='w-full'>
+              <div className='flex justify-between mb-2'>
+                <p><b>{list.title}</b></p>
+                <Link href="/habits/new">➕</Link>
+              </div>
+              <ul>
+                {list.habits && list.habits.length > 0 && (
+                  list.habits.map((habit, i) => (
+                    <li key={i} className="flex justify-between">
+                      <span>
+                        {habit.title}
+                      </span>
+                      <button onClick={() => handleHabitCompletion(selectedDate, habit.id)}>{isHabitCompleted(selectedDate, habit.id) ? '☑️' : '🔲'}</button>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+          ))
+        ) : (
+          <p>No habits found.</p>
+        )}
+      </div>
+      <LineChartComponent completionData={completions} />
+    </main>
   )
 }
 
