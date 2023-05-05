@@ -1,24 +1,18 @@
-import { useState } from 'react';
-import { MsalProvider } from "@azure/msal-react";
-import { PublicClientApplication, AccountInfo } from "@azure/msal-browser";
-import { msalConfig } from "../auth/authConfig";
-import { UserContext } from '../auth/UserContext';
-import HomePage from './home';
-import Header from '@/components/Header';
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
+import Dashboard from "./me";
 
-export const msalInstance = new PublicClientApplication(msalConfig);
-
-const Home = () => {
-  const [user, setUser] = useState<AccountInfo | null>(null);
+const Index = () => {
 
   return (
-    <UserContext.Provider value={{user, setUser}}>
-      <MsalProvider instance={msalInstance}>
-        <Header />
-        <HomePage />
-      </MsalProvider>
-    </UserContext.Provider>
+    <>
+      <UnauthenticatedTemplate>
+
+      </UnauthenticatedTemplate>
+      <AuthenticatedTemplate>
+        <Dashboard />
+      </AuthenticatedTemplate>
+    </>
   )
 }
 
-export default Home;
+export default Index;

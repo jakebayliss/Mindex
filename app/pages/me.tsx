@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CompleteHabitCommand, CompletionDto, HabitListDto, HabitsClient, NewListCommand, NewHabitCommand } from '../api-client';
 import { useMsal } from '@azure/msal-react';
 import { BASE_API_URL } from '../config';
@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Calendar from '@/components/Calendar'
 import LineChartComponent from '@/components/Chart';
 
-const HomePage = () => {
+const Dashboard = () => {
   const { accounts } = useMsal();
   const user = accounts[0];
   const [habitsClient, setHabitsClient] = useState<HabitsClient | undefined>(undefined);
@@ -18,6 +18,8 @@ const HomePage = () => {
   const [newListText, setNewListText] = useState('');
   const [addingNewList, setAddingNewList] = useState(false);
   const [newHabitText, setNewHabitText] = useState('');
+  const [editingListId, setEditingListId] = useState<number | undefined>(undefined);
+  const modal = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     (async () => {
@@ -58,16 +60,17 @@ const HomePage = () => {
     setAddingNewList(false);
   }
 
-  const handleNewHabit = async (listId: number | undefined) => {
-    const listIndex = habitLists.indexOf(habitLists.find((list) => list.id === listId) as HabitListDto);
+  const handleNewHabit = async () => {
+    const listIndex = habitLists.indexOf(habitLists.find((list) => list.id === editingListId) as HabitListDto);
     if(habitsClient && user) {
-      const updatedHabitList = await habitsClient.createHabit(user.localAccountId, new NewHabitCommand({listId: listId, title: newHabitText }));
+      const updatedHabitList = await habitsClient.createHabit(user.localAccountId, new NewHabitCommand({listId: editingListId, title: newHabitText }));
       setHabitLists(prevItems => {
         const newItems = [...prevItems];
         newItems[listIndex] = { ...updatedHabitList }  as HabitListDto;
         return newItems;
       });
     }
+    modal.current?.close();
     setNewHabitText('');
   }
 
@@ -87,19 +90,34 @@ const HomePage = () => {
     return completions.filter(x => x.completedOn?.toDateString() == date.toDateString()).map(x => x.habitId).includes(habitId);
   }
 
+  const openAddHabitModal = (listId: number | undefined) => {
+    modal.current?.showModal();
+    setEditingListId(listId);
+  }
+
   return (
     <main className="flex flex-wrap flex-row justify-center gap-10 p-10" style={{minHeight: 'calc(100vh - 56px)'}}>
       <div className="max-w-5xl items-center justify-center font-mono text-sm w-1/3 h-1/3">
         <Calendar onDateClick={(clickedDate) => handleDateClick(clickedDate)} />
         <h4 className='text-center py-2'>{selectedDate?.toDateString()}</h4>
       </div>
+      <dialog ref={modal}>
+        <div className='flex flex-col gap-2'>
+            <h4>Add a new habit</h4>
+            <input type='text' value={newHabitText} onChange={(e) => setNewHabitText(e.target.value)} />
+            <div className='flex justify-between'>
+                <button onClick={() => handleNewHabit()} className='bg-teal-600 px-4 py-1 rounded-sm hover:shadow-inner hover:shadow-teal-700 text-white'>Add</button>
+                <button onClick={() => modal.current?.close()}>❌</button>
+            </div>
+        </div>
+      </dialog>
       <div className="flex gap-10 w-1/2 h-1/3">
         {habitLists && habitLists.length > 0 ? (
           habitLists.map((list) => (
             <div key={list.id} className='w-full'>
               <div className='flex justify-between mb-2'>
                 <p><b>{list.title}</b></p>
-                <Link href="/habits/new">➕</Link>
+                <button onClick={() => openAddHabitModal(list.id)}>➕</button>
               </div>
               <ul>
                 {list.habits && list.habits.length > 0 && (
@@ -124,4 +142,4 @@ const HomePage = () => {
   )
 }
 
-export default HomePage;
+export default Dashboard;
