@@ -1,10 +1,13 @@
+import { CompletionDto, HabitListDto } from '@/api-client';
 import React, { useState } from 'react';
 
 interface CalendarProps {
     onDateClick: (date: Date) => void;
+    habits: HabitListDto[];
+    completions: CompletionDto[];
 }
 
-function Calendar({ onDateClick }: CalendarProps) {
+function Calendar({ onDateClick, habits, completions }: CalendarProps) {
 
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -64,6 +67,25 @@ function Calendar({ onDateClick }: CalendarProps) {
     }
   };
 
+  const getColour = (date: Date | null) => {
+    if(!date){
+      return null;
+    }
+    
+    const totalCount = habits.filter((x: HabitListDto) => x.createdOn && x.createdOn?.toISOString() <= date?.toISOString()).length;
+    const completedCount = completions.filter(c => c.completedOn?.toDateString() === date?.toDateString()).length;
+    var percentage = completedCount / totalCount;
+    if (percentage < 0.20)
+      return 'bg-red-600';
+    else if (percentage < 0.40)
+      return 'bg-amber-600';
+    else if (percentage < 0.60)
+       return 'bg-yellow-600';
+    else if (percentage < 0.80)
+      return 'bg-teal-600';
+    else return 'bg-green-600';
+  }
+
   return (
     <div className="rounded-lg shadow-lg">
         <div className="flex justify-between items-center py-2 px-4">
@@ -86,7 +108,7 @@ function Calendar({ onDateClick }: CalendarProps) {
         <div className="p-2 text-center">Sat</div>
       </div>
       <div className="days grid grid-cols-7 gap-1">
-        {dates.map((date, index) => {
+        {dates.map((date: Date | null, index) => {
           const isCurrentDate = date && date.toDateString() === new Date().toDateString();
           const selected = date && selectedDate && date.toDateString() === selectedDate.toDateString();
           return (
@@ -94,6 +116,7 @@ function Calendar({ onDateClick }: CalendarProps) {
                 key={index} onClick={() => handleDateClick(date)}
                 className={`p-2 text-center cursor-pointer ${isCurrentDate ? 'bg-teal-700 text-white' : (selected ? 'bg-teal-500 text-white' : '' )} ${date && !isCurrentDate && !selected ? 'bg-gray-100 hover:bg-teal-300' : ''}`}>
               {date ? date.getDate() : ''}
+              <div className={`rounded-full ${getColour(date)}`} style={{width: '5px', height: '5px'}}></div>
             </div>
           );
         })}

@@ -98,7 +98,7 @@ const Dashboard = () => {
   return (
     <main className="flex flex-wrap flex-row justify-center gap-10 p-10" style={{minHeight: 'calc(100vh - 56px)'}}>
       <div className="max-w-5xl items-center justify-center font-mono text-sm w-1/3 h-1/3">
-        <Calendar onDateClick={(clickedDate) => handleDateClick(clickedDate)} />
+        <Calendar onDateClick={(clickedDate) => handleDateClick(clickedDate)} habits={habitLists} completions={completions}/>
         <h4 className='text-center py-2'>{selectedDate?.toDateString()}</h4>
       </div>
       <dialog ref={modal}>
