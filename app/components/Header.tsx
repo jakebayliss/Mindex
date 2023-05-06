@@ -15,7 +15,7 @@ const Header = () => {
     return <div className='flex justify-between align-middle py-3 px-10 text-white bg-zinc-800'>
         <UnauthenticatedTemplate>
             <HeaderLeft />
-            <button className='bg-amber-600 px-4 py-1 rounded-sm hover:shadow-inner hover:shadow-amber-700' 
+            <button className='bg-teal-600 px-4 py-1 rounded-sm hover:shadow-inner hover:shadow-teal-700' 
                 onClick={() => instance.loginPopup(loginRequest).then((response) => setUser(response.account))}>
                 Login
             </button>
@@ -24,7 +24,7 @@ const Header = () => {
             <HeaderLeft />
             <div className='flex items-center gap-5'>
                 <p>Hello {accounts[0]?.name as string}!</p>
-                <button className='bg-amber-600 px-4 py-1 rounded-sm hover:shadow-inner hover:shadow-amber-700' 
+                <button className='bg-teal-600 px-4 py-1 rounded-sm hover:shadow-inner hover:shadow-teal-700' 
                     onClick={() => instance.logoutRedirect({ postLogoutRedirectUri: "/" }).then((x) => setUser(null))}>
                     Logout
                 </button>
