@@ -67,14 +67,10 @@ function Calendar({ onDateClick, habits, completions }: CalendarProps) {
     }
   };
 
-  const getColour = (date: Date | null) => {
-    if(!date){
-      return null;
-    }
-    
-    const totalCount = habits.filter((x: HabitListDto) => x.createdOn && x.createdOn?.toISOString() <= date?.toISOString()).length;
-    const completedCount = completions.filter(c => c.completedOn?.toDateString() === date?.toDateString()).length;
-    var percentage = completedCount / totalCount;
+  const getColour = (percentage: number | null) => {
+    if (percentage === null)
+      return '';
+    else
     if (percentage < 0.20)
       return 'bg-red-600';
     else if (percentage < 0.40)
@@ -111,12 +107,15 @@ function Calendar({ onDateClick, habits, completions }: CalendarProps) {
         {dates.map((date: Date | null, index) => {
           const isCurrentDate = date && date.toDateString() === new Date().toDateString();
           const selected = date && selectedDate && date.toDateString() === selectedDate.toDateString();
+          const totalCount = habits.filter((x: HabitListDto) => x.createdOn && date && x.createdOn?.toISOString() <= date?.toISOString()).length;
+          const completedCount = completions.filter(c => c.completedOn?.toDateString() === date?.toDateString()).length;
+          let percentage = date && date < new Date() ? completedCount / totalCount : null;
           return (
             <div 
                 key={index} onClick={() => handleDateClick(date)}
                 className={`p-2 text-center cursor-pointer ${isCurrentDate ? 'bg-teal-700 text-white' : (selected ? 'bg-teal-500 text-white' : '' )} ${date && !isCurrentDate && !selected ? 'bg-gray-100 hover:bg-teal-300' : ''}`}>
               {date ? date.getDate() : ''}
-              <div className={`rounded-full ${getColour(date)}`} style={{width: '5px', height: '5px'}}></div>
+              <div className={`rounded-full ${getColour(percentage)}`} style={{width: '5px', height: '5px'}}></div>
             </div>
           );
         })}
