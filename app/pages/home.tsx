@@ -25,7 +25,7 @@ const Home = () => {
               <div className="w-full md:w-1/3 px-4 mb-8">
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="text-lg font-bold mb-4">Track Your Progress</h3>
-                  <p className="text-gray-600">See how far you've come and celebrate your achievements with our progress tracking features.</p>
+                  <p className="text-gray-600">See how far you have come and celebrate your achievements with our progress tracking features.</p>
                 </div>
               </div>
             </div>

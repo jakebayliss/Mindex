@@ -53,6 +53,8 @@ module sql 'sql.bicep' = {
   }
 }
 
+var sqlConnectionString = 'Server=tcp:${sql.outputs.settings.fullyQualifiedDomainName},1433;Initial Catalog=${sql.outputs.settings.databaseName};Persist Security Info=False;User ID=${sqlAdministratorLogin};Password=${sqlAdministratorLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+
 resource plan 'Microsoft.Web/serverfarms@2020-12-01' = {
   name: '${environmentName}-${projectName}-app-plan'
   location: location
@@ -71,6 +73,7 @@ module webapi 'appservice-api.bicep' = {
     appName: '${environmentName}-${projectName}-api'
     planId: plan.id
     appInsightsInstrumentationKey: appInsights.outputs.settings.instrumentationKey
+    sqlConnectionString: sqlConnectionString
     location: location
     tags: tags
   }
