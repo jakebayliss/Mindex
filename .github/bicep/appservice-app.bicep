@@ -1,10 +1,9 @@
 param appName string
 param planId string
 param appInsightsInstrumentationKey string
+param apiUrl string
 param location string = resourceGroup().location
 param tags object
-
-
 
 resource webapp 'Microsoft.Web/sites@2021-01-01' = {
   name: appName
@@ -29,17 +28,13 @@ resource webapp 'Microsoft.Web/sites@2021-01-01' = {
           name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
           value: '~2'
         }
-      ]
-      minTlsVersion: '1.2'
-      netFrameworkVersion: 'v6.0'
-      ipSecurityRestrictions: [
         {
-          action: 'Allow'
-          ipAddress: '58.107.140.222/32'
-          name: 'Jake - Home'
-          priority: 1
+          name: 'BASE_API_URL'
+          value: apiUrl
         }
       ]
+      minTlsVersion: '1.2'
+      netFrameworkVersion: 'v7.0'
     }
   }
 }

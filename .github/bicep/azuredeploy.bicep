@@ -86,6 +86,7 @@ module webapp 'appservice-app.bicep' = {
     appName: '${environmentName}-${projectName}-app'
     planId: plan.id
     appInsightsInstrumentationKey: appInsights.outputs.settings.instrumentationKey
+    apiUrl: webapi.outputs.settings.url
     location: location
     tags: tags
   }
