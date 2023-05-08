@@ -124,7 +124,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: app-drop
-          path: ./app-drop
+          path: ./app-drop/_next
 
       - name: Deploy App
         uses: azure/webapps-deploy@v2
