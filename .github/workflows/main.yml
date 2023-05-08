@@ -53,16 +53,12 @@ jobs:
           pushd './api/Mindex'
           dotnet build --configuration Release --output ../build
           popd
-      
-      - name: zip api
-        run: |
-          Compress-Archive -Path ./api/build -DestinationPath ./api.zip
 
       - name: Upload Artifact - Api
         uses: actions/upload-artifact@v3
         with:
           name: api-drop
-          path: ./api.zip
+          path: ./api/build
           if-no-files-found: error
   
   buildApp:
@@ -87,15 +83,11 @@ jobs:
         run: npm run build --if-present
         working-directory: ./app
 
-      - name: zip api
-        run: |
-          Compress-Archive -Path ./app/.next -DestinationPath ./app.zip
-
       - name: Upload Artifact - App
         uses: actions/upload-artifact@v3
         with:
           name: app-drop
-          path: ./app.zip
+          path: ./app/.next
           if-no-files-found: error
 
   deployDev:
@@ -120,36 +112,20 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: api-drop
-
-      - name: unzip api
-        run: |
-          Expand-Archive -Path ./api.zip -DestinationPath ./api-drop
-
-      - name: list files
-        run: |
-          ls -r
       
       - name: Deploy Api
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-api'
-          package: ./api-drop/build
+          package: ./api-drop
 
       - name: Download Artifact - App
         uses: actions/download-artifact@v3
         with:
           name: app-drop
 
-      - name: unzip app
-        run: |
-          Expand-Archive -Path ./app.zip -DestinationPath ./app-drop
-
-      - name: list files
-        run: |
-          ls -r
-
       - name: Deploy App
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-app'
-          package: ./app-drop/.next
+          package: ./app-drop
