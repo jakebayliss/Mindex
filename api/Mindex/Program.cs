@@ -22,17 +22,12 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseOpenApi();
+app.UseSwaggerUi3(settings =>
 {
-	app.UseOpenApi();
-	app.UseSwaggerUi3(settings =>
-	{
-		settings.Path = "/api";
-		settings.DocumentPath = "/api/specification.json";
-	});
-}
+	settings.Path = "/api";
+	settings.DocumentPath = "/api/specification.json";
+});
 
 app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
