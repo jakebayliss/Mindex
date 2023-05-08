@@ -112,20 +112,22 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: api-drop
+          path: ./api-drop
       
       - name: Deploy Api
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-api'
-          package: api-drop
+          package: ./api-drop
 
       - name: Download Artifact - App
         uses: actions/download-artifact@v3
         with:
           name: app-drop
+          path: ./app-drop
 
       - name: Deploy App
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'dev-mindex-app'
-          package: app-drop
+          package: ./app-drop
