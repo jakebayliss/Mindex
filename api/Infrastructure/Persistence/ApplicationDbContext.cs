@@ -22,6 +22,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
 
+    public DbSet<User> Users => Set<User>();
     public DbSet<HabitList> HabitLists => Set<HabitList>();
     public DbSet<Habit> Habits => Set<Habit>();
     public DbSet<Completion> Completions => Set<Completion>();

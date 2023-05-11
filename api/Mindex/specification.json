@@ -390,6 +390,38 @@
           }
         }
       }
+    },
+    "/api/Users/users/new": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_CreateUser",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -612,6 +644,36 @@
           "date": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "points": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "CreateUserCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "displayName": {
+            "type": "string"
           }
         }
       }
