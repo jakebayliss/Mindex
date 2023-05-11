@@ -15,24 +15,22 @@ builder.Services.AddCors(options =>
 {
 	options.AddPolicy(name: MyAllowSpecificOrigins, builder =>
 	{
-		builder.WithOrigins("*").AllowAnyHeader()
-							.AllowAnyMethod(); ;
+		builder.WithOrigins("*")
+			.AllowAnyHeader()
+			.AllowAnyMethod();
 	});
 });
 
 var app = builder.Build();
 
 app.UseOpenApi();
-app.UseSwaggerUi3(settings =>
-{
-	settings.Path = "/api";
-	settings.DocumentPath = "/api/specification.json";
-});
+app.UseSwaggerUi3();
 
 app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
+app.UseStaticFiles();
 
 app.MapControllers();
 

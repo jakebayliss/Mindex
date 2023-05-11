@@ -112,7 +112,7 @@ const Dashboard = () => {
         </div>
       </dialog>
       <div className="flex gap-10 w-1/2 h-1/3">
-        {habitLists && habitLists.length > 0 ? (
+        {habitLists && habitLists.length > 0 && (
           habitLists.map((list) => (
             <div key={list.id} className='w-full'>
               <div className='flex justify-between mb-2'>
@@ -133,8 +133,6 @@ const Dashboard = () => {
               </ul>
             </div>
           ))
-        ) : (
-          <p>No habits found.</p>
         )}
       </div>
       <LineChartComponent completionData={completions} />
