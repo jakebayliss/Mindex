@@ -14,6 +14,8 @@ public class HabitListDto : IMapFrom<HabitList>
 	public string Title { get; set; }
 	public DateTime CreatedOn { get; set; }
 	public List<HabitDto> Habits { get; set; }
+	public double Points { get; set; }
+	public int Level { get; set; }
 }
 
 public class HabitDto : IMapFrom<Habit>

@@ -458,6 +458,14 @@
             "items": {
               "$ref": "#/components/schemas/HabitDto"
             }
+          },
+          "points": {
+            "type": "number",
+            "format": "double"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -556,6 +564,10 @@
             "type": "string",
             "format": "date-time"
           },
+          "streak": {
+            "type": "integer",
+            "format": "int32"
+          },
           "habitListId": {
             "type": "integer",
             "format": "int32"
@@ -630,6 +642,14 @@
           "completedOn": {
             "type": "string",
             "format": "date-time"
+          },
+          "points": {
+            "type": "number",
+            "format": "double"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -637,6 +657,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
           "habitId": {
             "type": "integer",
             "format": "int32"

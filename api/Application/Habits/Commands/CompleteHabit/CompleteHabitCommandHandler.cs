@@ -9,6 +9,7 @@ namespace Application.Habits.Commands.CompleteHabit
 {
 	public class CompleteHabitCommand : IRequest<CompletionDto>
 	{
+		public Guid UserId { get; set; }
 		public int HabitId { get; set; }
 		public DateTime Date { get; set; }
 	}
@@ -16,20 +17,26 @@ namespace Application.Habits.Commands.CompleteHabit
 	public class CompleteHabitCommandHandler : IRequestHandler<CompleteHabitCommand, CompletionDto>
 	{
 		private readonly IApplicationDbContext _context;
+		private readonly IPointsService _pointsService;
 
-		public CompleteHabitCommandHandler(IApplicationDbContext context)
+		public CompleteHabitCommandHandler(IApplicationDbContext context, IPointsService pointsService)
 		{
 			_context = context;
+			_pointsService = pointsService;
 		}
 
 		public async Task<CompletionDto> Handle(CompleteHabitCommand request, CancellationToken cancellationToken)
 		{
-			var habit = await _context.Habits.FirstOrDefaultAsync(x => x.Id == request.HabitId, cancellationToken);
-
-			if (habit == null)
-			{
-				throw new NotFoundException(nameof(Habit), request.HabitId);
-			}
+			var habit = await _context.Habits.FirstOrDefaultAsync(x => x.Id == request.HabitId, cancellationToken) 
+				?? throw new NotFoundException(nameof(Habit), request.HabitId);
+			
+			var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken)
+				?? throw new NotFoundException(nameof(User), request.UserId);
+			
+			var lastCompletion = await _context.Completions.Where(x => x.HabitId == request.HabitId)
+				.OrderByDescending(x => x.CompletedOn)
+				.FirstOrDefaultAsync(cancellationToken)
+				?? throw new NotFoundException(nameof(Completion));
 
 			var completion = new Completion
 			{
@@ -39,10 +46,17 @@ namespace Application.Habits.Commands.CompleteHabit
 			};
 			await _context.Completions.AddAsync(completion, cancellationToken);
 			await _context.SaveChangesAsync(cancellationToken);
+
+			user.Points = _pointsService.CalculatePoints(user, habit, lastCompletion);
+			_context.Users.Update(user);
+			await _context.SaveChangesAsync(cancellationToken);
+
 			return new CompletionDto
 			{
 				CompletedOn = completion.CompletedOn,
 				HabitId = completion.HabitId,
+				Points = user.Points,
+				Level = _pointsService.CalculateLevel(user.Points)
 			};
 		}
 	}

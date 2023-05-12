@@ -514,6 +514,8 @@ export class HabitListDto implements IHabitListDto {
     title?: string;
     createdOn?: Date;
     habits?: HabitDto[];
+    points?: number;
+    level?: number;
 
     constructor(data?: IHabitListDto) {
         if (data) {
@@ -534,6 +536,8 @@ export class HabitListDto implements IHabitListDto {
                 for (let item of _data["habits"])
                     this.habits!.push(HabitDto.fromJS(item));
             }
+            this.points = _data["points"];
+            this.level = _data["level"];
         }
     }
 
@@ -554,6 +558,8 @@ export class HabitListDto implements IHabitListDto {
             for (let item of this.habits)
                 data["habits"].push(item.toJSON());
         }
+        data["points"] = this.points;
+        data["level"] = this.level;
         return data;
     }
 }
@@ -563,6 +569,8 @@ export interface IHabitListDto {
     title?: string;
     createdOn?: Date;
     habits?: HabitDto[];
+    points?: number;
+    level?: number;
 }
 
 export class HabitDto implements IHabitDto {
@@ -747,6 +755,7 @@ export class Habit implements IHabit {
     note?: string | undefined;
     reminder?: Date | undefined;
     createdOn?: Date;
+    streak?: number;
     habitListId?: number;
 
     constructor(data?: IHabit) {
@@ -765,6 +774,7 @@ export class Habit implements IHabit {
             this.note = _data["note"];
             this.reminder = _data["reminder"] ? new Date(_data["reminder"].toString()) : <any>undefined;
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.streak = _data["streak"];
             this.habitListId = _data["habitListId"];
         }
     }
@@ -783,6 +793,7 @@ export class Habit implements IHabit {
         data["note"] = this.note;
         data["reminder"] = this.reminder ? this.reminder.toISOString() : <any>undefined;
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["streak"] = this.streak;
         data["habitListId"] = this.habitListId;
         return data;
     }
@@ -794,6 +805,7 @@ export interface IHabit {
     note?: string | undefined;
     reminder?: Date | undefined;
     createdOn?: Date;
+    streak?: number;
     habitListId?: number;
 }
 
@@ -968,6 +980,8 @@ export interface IUpdateListCommand {
 export class CompletionDto implements ICompletionDto {
     habitId?: number;
     completedOn?: Date;
+    points?: number;
+    level?: number;
 
     constructor(data?: ICompletionDto) {
         if (data) {
@@ -982,6 +996,8 @@ export class CompletionDto implements ICompletionDto {
         if (_data) {
             this.habitId = _data["habitId"];
             this.completedOn = _data["completedOn"] ? new Date(_data["completedOn"].toString()) : <any>undefined;
+            this.points = _data["points"];
+            this.level = _data["level"];
         }
     }
 
@@ -996,6 +1012,8 @@ export class CompletionDto implements ICompletionDto {
         data = typeof data === 'object' ? data : {};
         data["habitId"] = this.habitId;
         data["completedOn"] = this.completedOn ? this.completedOn.toISOString() : <any>undefined;
+        data["points"] = this.points;
+        data["level"] = this.level;
         return data;
     }
 }
@@ -1003,9 +1021,12 @@ export class CompletionDto implements ICompletionDto {
 export interface ICompletionDto {
     habitId?: number;
     completedOn?: Date;
+    points?: number;
+    level?: number;
 }
 
 export class CompleteHabitCommand implements ICompleteHabitCommand {
+    userId?: string;
     habitId?: number;
     date?: Date;
 
@@ -1020,6 +1041,7 @@ export class CompleteHabitCommand implements ICompleteHabitCommand {
 
     init(_data?: any) {
         if (_data) {
+            this.userId = _data["userId"];
             this.habitId = _data["habitId"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
         }
@@ -1034,6 +1056,7 @@ export class CompleteHabitCommand implements ICompleteHabitCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
         data["habitId"] = this.habitId;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
         return data;
@@ -1041,6 +1064,7 @@ export class CompleteHabitCommand implements ICompleteHabitCommand {
 }
 
 export interface ICompleteHabitCommand {
+    userId?: string;
     habitId?: number;
     date?: Date;
 }

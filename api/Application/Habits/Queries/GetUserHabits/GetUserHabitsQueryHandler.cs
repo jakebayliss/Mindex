@@ -14,16 +14,20 @@ public class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQuery, Use
 {
 	private readonly IApplicationDbContext _context;
 	private readonly IMapper _mapper;
+	private readonly IPointsService _pointsService;
 
-	public GetUserHabitsQueryHandler(IApplicationDbContext context, IMapper mapper)
+	public GetUserHabitsQueryHandler(IApplicationDbContext context, IMapper mapper, IPointsService pointsService)
 	{
 		_context = context;
 		_mapper = mapper;
+		_pointsService = pointsService;
 	}
 
 	public async Task<UserHabitsDto> Handle(GetUserHabitsQuery query, CancellationToken cancellationToken)
 	{
 		var userHabitsLists = _context.HabitLists.Where(x => x.UserId == query.UserId).Include(x => x.Habits).ToList();
+		var points = _context.Users.Where(x => x.UserId == query.UserId).FirstOrDefault().Points;
+		var level = _pointsService.CalculateLevel(points);
 		return new UserHabitsDto { 
 			HabitLists = userHabitsLists.Select(x => new HabitListDto
 			{
@@ -36,7 +40,9 @@ public class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQuery, Use
 					Note = y.Note,
 					Reminder = y.Reminder,
 					ListId = x.Id
-				}).OrderBy(x => x.CreatedOn).ToList()
+				}).OrderBy(x => x.CreatedOn).ToList(),
+				Points = points,
+				Level = level
 			}) 
 		};
 	}

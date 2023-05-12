@@ -23,6 +23,7 @@ public static class ConfigureServices
 		services.AddScoped<ApplicationDbContextInitialiser>();
 
 		services.AddTransient<IDateTime, DateTimeService>();
+		services.AddTransient<IPointsService, PointsService>();
 
 		return services;
 	}

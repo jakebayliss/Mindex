@@ -10,6 +10,7 @@ public class Habit
 
 	public DateTime? Reminder { get; set; }
 	public DateTime CreatedOn { get; set; }
+	public int Streak { get; set; }
 
 
 	public int HabitListId { get; set; }

@@ -3,7 +3,6 @@ import { CompleteHabitCommand, CompletionDto, HabitListDto, HabitsClient, NewLis
 import { useMsal } from '@azure/msal-react';
 import { BASE_API_URL } from '../config';
 
-import Link from 'next/link';
 import Calendar from '@/components/Calendar'
 import LineChartComponent from '@/components/Chart';
 

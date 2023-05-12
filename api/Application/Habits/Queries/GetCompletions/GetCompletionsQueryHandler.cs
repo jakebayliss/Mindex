@@ -14,6 +14,8 @@ namespace Application.Completions.Queries.GetCompletions
 	{
 		public int HabitId { get; set; }
 		public DateTime CompletedOn { get; set; }
+		public double Points { get; set; }
+		public int Level { get; set; }
 	}
 
 	public class GetCompletionsQueryHandler : IRequestHandler<GetCompletionsQuery, IEnumerable<CompletionDto>>
