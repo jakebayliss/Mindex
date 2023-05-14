@@ -26,8 +26,9 @@ public class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQuery, Use
 	public async Task<UserHabitsDto> Handle(GetUserHabitsQuery query, CancellationToken cancellationToken)
 	{
 		var userHabitsLists = _context.HabitLists.Where(x => x.UserId == query.UserId).Include(x => x.Habits).ToList();
-		var points = _context.Users.Where(x => x.UserId == query.UserId).FirstOrDefault().Points;
-		var level = _pointsService.CalculateLevel(points);
+		var user = _context.Users.Where(x => x.UserId == query.UserId).FirstOrDefault();
+		var points = user?.Points;
+		var level = _pointsService.CalculateLevel(points ?? 0);
 		return new UserHabitsDto { 
 			HabitLists = userHabitsLists.Select(x => new HabitListDto
 			{
@@ -41,7 +42,7 @@ public class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQuery, Use
 					Reminder = y.Reminder,
 					ListId = x.Id
 				}).OrderBy(x => x.CreatedOn).ToList(),
-				Points = points,
+				Points = points ?? 0,
 				Level = level
 			}) 
 		};

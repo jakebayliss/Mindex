@@ -83,6 +83,7 @@ namespace Mindex.Controllers
 		[HttpPost("{userId}/complete")]
 		public async Task<ActionResult<CompletionDto>> CompleteHabit(string userId, CompleteHabitCommand command)
 		{
+			command.UserId = new Guid(userId);
 			var completed = await _mediator.Send(command);
 			return Ok(completed);
 		}

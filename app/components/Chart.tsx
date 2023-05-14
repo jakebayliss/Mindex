@@ -22,8 +22,8 @@ const LineChartComponent = ({ completionData }: ChartProps) => {
   }
 
   return (
-    <div className="w-full">
-        <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full min-h-[300px]">
+        <ResponsiveContainer width="100%" height="100%" minHeight={'300px'}>
             <LineChart width={1000} height={300} data={data.sort(x => x.i).reverse()} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                 <XAxis dataKey="name" />
                 <Tooltip />

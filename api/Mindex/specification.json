@@ -391,6 +391,38 @@
         }
       }
     },
+    "/api/Users/users/{userId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_GetUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Users/users/new": {
       "post": {
         "tags": [
@@ -668,6 +700,20 @@
           "date": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "UserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "points": {
+            "type": "number",
+            "format": "double"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

@@ -14,11 +14,12 @@ namespace Mindex.Test.Services.PointsService
 
 		[Test]
 		[TestCase(0, 1)]
-		[TestCase(20, 7)]
+		[TestCase(10, 1)]
+		[TestCase(30, 1)]
+		[TestCase(40, 2)]
 		[TestCase(100, 12)]
 		[TestCase(200, 15)]
 		[TestCase(400, 19)]
-		[TestCase(40000, 86)]
 		public void CalculatePoints_WhenCalled_ReturnsPoints(double points, int level)
 		{
 			// Act

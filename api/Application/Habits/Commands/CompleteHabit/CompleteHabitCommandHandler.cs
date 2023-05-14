@@ -38,6 +38,11 @@ namespace Application.Habits.Commands.CompleteHabit
 				.FirstOrDefaultAsync(cancellationToken)
 				?? throw new NotFoundException(nameof(Completion));
 
+			user.Points += 10;
+			user.Points = _pointsService.CalculatePoints(user, habit, lastCompletion);
+			_context.Users.Update(user);
+			await _context.SaveChangesAsync(cancellationToken);
+			
 			var completion = new Completion
 			{
 				HabitId = habit.Id,
@@ -45,10 +50,6 @@ namespace Application.Habits.Commands.CompleteHabit
 				CreatedOn = DateTime.Now
 			};
 			await _context.Completions.AddAsync(completion, cancellationToken);
-			await _context.SaveChangesAsync(cancellationToken);
-
-			user.Points = _pointsService.CalculatePoints(user, habit, lastCompletion);
-			_context.Users.Update(user);
 			await _context.SaveChangesAsync(cancellationToken);
 
 			return new CompletionDto
