@@ -34,12 +34,14 @@ namespace Application.Users.Commands.CreateUser
 				new HabitList
 				{
 					CreatedOn = now,
-					Title = "Daily"
+					Title = "Daily",
+					UserId = command.UserId
 				},
 				new HabitList
 				{
 					CreatedOn = now,
-					Title = "Weekly"
+					Title = "Weekly",
+					UserId = command.UserId
 				}
 			});
 			await _context.SaveChangesAsync(cancellationToken);
