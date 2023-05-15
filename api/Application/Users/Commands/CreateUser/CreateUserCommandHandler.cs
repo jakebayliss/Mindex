@@ -27,6 +27,23 @@ namespace Application.Users.Commands.CreateUser
 			};
 			_context.Users.Add(user);
 			await _context.SaveChangesAsync(cancellationToken);
+
+			var now = DateTime.Now;
+			await _context.HabitLists.AddRangeAsync(new List<HabitList>
+			{
+				new HabitList
+				{
+					CreatedOn = now,
+					Title = "Daily"
+				},
+				new HabitList
+				{
+					CreatedOn = now,
+					Title = "Weekly"
+				}
+			});
+			await _context.SaveChangesAsync(cancellationToken);
+			
 			return user;
 		}
 	}
