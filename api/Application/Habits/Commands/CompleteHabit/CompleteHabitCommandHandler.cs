@@ -35,8 +35,7 @@ namespace Application.Habits.Commands.CompleteHabit
 			
 			var lastCompletion = await _context.Completions.Where(x => x.HabitId == request.HabitId)
 				.OrderByDescending(x => x.CompletedOn)
-				.FirstOrDefaultAsync(cancellationToken)
-				?? throw new NotFoundException(nameof(Completion));
+				.FirstOrDefaultAsync(cancellationToken);
 
 			user.Points += 10;
 			user.Points = _pointsService.CalculatePoints(user, habit, lastCompletion);
