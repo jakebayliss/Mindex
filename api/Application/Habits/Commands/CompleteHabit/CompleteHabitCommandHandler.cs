@@ -46,7 +46,8 @@ namespace Application.Habits.Commands.CompleteHabit
 			{
 				HabitId = habit.Id,
 				CompletedOn = request.Date,
-				CreatedOn = DateTime.Now
+				CreatedOn = DateTime.Now,
+				UserId = request.UserId
 			};
 			await _context.Completions.AddAsync(completion, cancellationToken);
 			await _context.SaveChangesAsync(cancellationToken);

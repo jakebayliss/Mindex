@@ -57,15 +57,6 @@ const Dashboard = () => {
     })();
   }, [habitsClient])
 
-  const handleDateClick = (clickedDate: Date | null) => {
-    if (clickedDate) {
-      setSelectedDate(clickedDate);
-      if(habitLists && habitLists[0] && habitLists[0].habits){
-        var filteredHabits = habitLists[0].habits.filter(x => x.createdOn && x.createdOn >= clickedDate);
-      }
-    }
-  }
-
   const handleNewList = async () => {
     if(habitsClient && b2cUser) {
       const newList = await habitsClient.createHabitList(b2cUser.localAccountId, new NewListCommand({userId: b2cUser.localAccountId, title: newListText}))
@@ -89,22 +80,22 @@ const Dashboard = () => {
     setNewHabitText('');
   }
 
-  const handleHabitCompletion = async (date: Date, habitId: number | undefined) => {
-    const completed = isHabitCompleted(date, habitId);
+  const handleHabitCompletion = async (habitId: number | undefined) => {
+    const completed = isHabitCompleted(habitId);
     if(completed) {
       return;
     }
 
     if(habitsClient && b2cUser) {
-        const completion = await habitsClient.completeHabit(b2cUser.localAccountId, new CompleteHabitCommand({habitId, date: new Date(date)}));
+        const completion = await habitsClient.completeHabit(b2cUser.localAccountId, new CompleteHabitCommand({habitId, date: new Date(selectedDate)}));
         setCompletions([...completions, completion]);
         setPoints(completion.points);
         setLevel(completion.level);
     }
   }
 
-  const isHabitCompleted = (date: Date, habitId: number | undefined) => {
-    return completions.filter(x => x.completedOn?.toDateString() == date.toDateString()).map(x => x.habitId).includes(habitId);
+  const isHabitCompleted = (habitId: number | undefined) => {
+    return completions.filter(x => x.completedOn?.toDateString() == selectedDate.toDateString()).map(x => x.habitId).includes(habitId);
   }
 
   const openAddHabitModal = (listId: number | undefined) => {
@@ -119,7 +110,7 @@ const Dashboard = () => {
       </div>
       <div className='flex flex-wrap flex-row justify-center gap-10'>
         <div className="max-w-5xl items-center justify-center font-mono text-sm h-1/3">
-          <Calendar onDateClick={(clickedDate) => handleDateClick(clickedDate)} habits={habitLists} completions={completions}/>
+          <Calendar onDateClick={(clickedDate) => setSelectedDate(clickedDate)} habits={habitLists} completions={completions}/>
           <h4 className='text-center py-2'>{selectedDate?.toDateString()}</h4>
         </div>
         <dialog ref={modal}>
@@ -146,7 +137,7 @@ const Dashboard = () => {
                       <span>
                         {habit.title}
                       </span>
-                      <button onClick={() => handleHabitCompletion(selectedDate, habit.id)}>{isHabitCompleted(selectedDate, habit.id) ? '☑️' : '🔲'}</button>
+                      <button onClick={() => handleHabitCompletion(habit.id)}>{isHabitCompleted(habit.id) ? '☑️' : '🔲'}</button>
                     </li>
                   ))
                 )}

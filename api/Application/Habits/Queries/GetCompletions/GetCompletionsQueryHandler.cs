@@ -29,8 +29,11 @@ namespace Application.Completions.Queries.GetCompletions
 
 		public async Task<IEnumerable<CompletionDto>> Handle(GetCompletionsQuery request, CancellationToken cancellationToken)
 		{
-			var startDate = DateTime.Now.AddDays(-request.Days);
-			var completions = _context.Completions.Where(x => x.CompletedOn >= startDate);
+			var completions = _context.Completions.Where(x => x.UserId == request.UserId);
+			if (!completions.Any())
+			{
+				return new List<CompletionDto>();
+			}
 
 			return completions.Select(x => new CompletionDto
 			{

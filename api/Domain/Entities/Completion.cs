@@ -6,4 +6,5 @@ public class Completion
 	public DateTime CompletedOn { get; set; }
 	public int HabitId { get; set; }
 	public DateTime CreatedOn { get; set; }
+	public Guid UserId { get; set; }
 }
