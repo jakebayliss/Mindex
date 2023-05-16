@@ -87,7 +87,7 @@ const Dashboard = () => {
     }
 
     if(habitsClient && b2cUser) {
-        const completion = await habitsClient.completeHabit(b2cUser.localAccountId, new CompleteHabitCommand({habitId, date: new Date(selectedDate.toLocaleDateString())}));
+        const completion = await habitsClient.completeHabit(b2cUser.localAccountId, new CompleteHabitCommand({habitId, date: new Date(selectedDate.toISOString())}));
         setCompletions([...completions, completion]);
         setPoints(completion.points);
         setLevel(completion.level);
@@ -95,7 +95,7 @@ const Dashboard = () => {
   }
 
   const isHabitCompleted = (habitId: number | undefined) => {
-    return completions.filter(x => x.completedOn?.toDateString() == selectedDate.toLocaleDateString()).map(x => x.habitId).includes(habitId);
+    return completions.filter(x => x.completedOn?.toLocaleDateString() == selectedDate.toLocaleDateString()).map(x => x.habitId).includes(habitId);
   }
 
   const openAddHabitModal = (listId: number | undefined) => {

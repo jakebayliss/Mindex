@@ -27,6 +27,7 @@ namespace Application.Habits.Commands.CompleteHabit
 
 		public async Task<CompletionDto> Handle(CompleteHabitCommand request, CancellationToken cancellationToken)
 		{
+			var localDate = request.Date.ToLocalTime();
 			var habit = await _context.Habits.FirstOrDefaultAsync(x => x.Id == request.HabitId, cancellationToken) 
 				?? throw new NotFoundException(nameof(Habit), request.HabitId);
 			
@@ -45,7 +46,7 @@ namespace Application.Habits.Commands.CompleteHabit
 			var completion = new Completion
 			{
 				HabitId = habit.Id,
-				CompletedOn = request.Date,
+				CompletedOn = localDate,
 				CreatedOn = DateTime.Now,
 				UserId = request.UserId
 			};
@@ -54,7 +55,7 @@ namespace Application.Habits.Commands.CompleteHabit
 
 			return new CompletionDto
 			{
-				CompletedOn = completion.CompletedOn,
+				CompletedOn = localDate,
 				HabitId = completion.HabitId,
 				Points = user.Points,
 				Level = _pointsService.CalculateLevel(user.Points)
