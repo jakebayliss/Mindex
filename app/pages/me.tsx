@@ -87,7 +87,7 @@ const Dashboard = () => {
     }
 
     if(habitsClient && b2cUser) {
-        const completion = await habitsClient.completeHabit(b2cUser.localAccountId, new CompleteHabitCommand({habitId, date: new Date(selectedDate)}));
+        const completion = await habitsClient.completeHabit(b2cUser.localAccountId, new CompleteHabitCommand({habitId, date: new Date(selectedDate.toLocaleDateString())}));
         setCompletions([...completions, completion]);
         setPoints(completion.points);
         setLevel(completion.level);
@@ -95,7 +95,7 @@ const Dashboard = () => {
   }
 
   const isHabitCompleted = (habitId: number | undefined) => {
-    return completions.filter(x => x.completedOn?.toDateString() == selectedDate.toDateString()).map(x => x.habitId).includes(habitId);
+    return completions.filter(x => x.completedOn?.toDateString() == selectedDate.toLocaleDateString()).map(x => x.habitId).includes(habitId);
   }
 
   const openAddHabitModal = (listId: number | undefined) => {
@@ -111,7 +111,7 @@ const Dashboard = () => {
       <div className='flex flex-wrap flex-row justify-center gap-10'>
         <div className="max-w-5xl items-center justify-center font-mono text-sm h-1/3">
           <Calendar onDateClick={(clickedDate) => setSelectedDate(clickedDate)} habits={habitLists} completions={completions}/>
-          <h4 className='text-center py-2'>{selectedDate?.toDateString()}</h4>
+          <h4 className='text-center py-2'>{selectedDate?.toLocaleDateString()}</h4>
         </div>
         <dialog ref={modal}>
           <div className='flex flex-col gap-2'>
