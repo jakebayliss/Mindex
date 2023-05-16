@@ -17,13 +17,13 @@ namespace Mindex.Controllers
 			_mediator = mediator;
 		}
 
-		[HttpGet("users/{userId}")]
+		[HttpGet("{userId}")]
 		public async Task<UserDto> GetUser(string userId)
 		{
 			return await _mediator.Send(new GetUserQuery { UserId = new Guid(userId) });
 		}
 
-		[HttpPost("users/new")]
+		[HttpPost("new")]
 		public async Task<ActionResult<User>> CreateUser(CreateUserCommand command)
 		{
 			var user = await _mediator.Send(command);

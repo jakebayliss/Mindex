@@ -429,7 +429,7 @@ export class UsersClient implements IUsersClient {
     }
 
     getUser(userId: string | null): Promise<UserDto> {
-        let url_ = this.baseUrl + "/api/Users/users/{userId}";
+        let url_ = this.baseUrl + "/api/Users/{userId}";
         if (userId === undefined || userId === null)
             throw new Error("The parameter 'userId' must be defined.");
         url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
@@ -466,7 +466,7 @@ export class UsersClient implements IUsersClient {
     }
 
     createUser(command: CreateUserCommand): Promise<User> {
-        let url_ = this.baseUrl + "/api/Users/users/new";
+        let url_ = this.baseUrl + "/api/Users/new";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);

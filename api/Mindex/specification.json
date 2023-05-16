@@ -391,7 +391,7 @@
         }
       }
     },
-    "/api/Users/users/{userId}": {
+    "/api/Users/{userId}": {
       "get": {
         "tags": [
           "Users"
@@ -423,7 +423,7 @@
         }
       }
     },
-    "/api/Users/users/new": {
+    "/api/Users/new": {
       "post": {
         "tags": [
           "Users"
