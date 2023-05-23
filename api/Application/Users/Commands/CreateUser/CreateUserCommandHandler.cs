@@ -23,7 +23,8 @@ namespace Application.Users.Commands.CreateUser
 			var user = new User
 			{
 				UserId = command.UserId,
-				DisplayName = command.DisplayName
+				DisplayName = command.DisplayName,
+				CreatedOn = DateTime.Now
 			};
 			_context.Users.Add(user);
 			await _context.SaveChangesAsync(cancellationToken);

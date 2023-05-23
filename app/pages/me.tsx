@@ -118,7 +118,7 @@ const Dashboard = () => {
         wrapperStyle={{}}
         visible={true} />
     </main> : (
-    <main className="flex flex-col px-10" style={{minHeight: 'calc(100vh - 56px)'}}>
+    <main className="flex flex-col md:px-10" style={{minHeight: 'calc(100vh - 56px)'}}>
       <div className='p-5 text-right'>
         <p>Lvl {level}: {points} points</p>
       </div>
@@ -160,7 +160,6 @@ const Dashboard = () => {
           ))
         )}
       </div>
-      <LineChartComponent completionData={completions} />
     </main>
   )
 }

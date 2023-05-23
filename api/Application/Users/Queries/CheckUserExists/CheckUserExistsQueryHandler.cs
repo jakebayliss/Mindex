@@ -13,6 +13,7 @@ namespace Application.Users.Queries.CheckUserExists
 	{
 		public double Points { get; set; }
 		public int Level { get; set; }
+		public DateTime CreatedOn { get; set; }
 	}
 
 	public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDto>
@@ -38,7 +39,8 @@ namespace Application.Users.Queries.CheckUserExists
 			return new UserDto
 			{
 				Points = user.Points,
-				Level = level
+				Level = level,
+				CreatedOn = user.CreatedOn
 			};
 		}
 	}

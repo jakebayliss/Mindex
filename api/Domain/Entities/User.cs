@@ -11,5 +11,6 @@ namespace Domain.Entities
 		public Guid UserId { get; set; }
 		public string DisplayName { get; set; }
 		public double Points { get; set; }
+		public DateTime CreatedOn { get; set; }
 	}
 }

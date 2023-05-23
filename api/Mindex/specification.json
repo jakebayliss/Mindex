@@ -714,6 +714,10 @@
           "level": {
             "type": "integer",
             "format": "int32"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -731,6 +735,10 @@
           "points": {
             "type": "number",
             "format": "double"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
