@@ -5,12 +5,15 @@ import { BASE_API_URL } from '../config';
 
 import Calendar from '@/components/Calendar'
 import LineChartComponent from '@/components/Chart';
+import { Triangle } from  'react-loader-spinner'
 
 const Dashboard = () => {
   const { accounts } = useMsal();
   const b2cUser = accounts[0];
   const [habitsClient, setHabitsClient] = useState<HabitsClient | undefined>(undefined);
   const [usersClient, setUsersClient] = useState<UsersClient | undefined>(undefined);
+
+  const [loading, setLoading] = useState(false);
   
   const [user, setUser] = useState<UserDto>();
   const [points, setPoints] = useState<number | undefined>(0);
@@ -26,6 +29,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       setHabitsClient(new HabitsClient(BASE_API_URL));
       setUsersClient(new UsersClient(BASE_API_URL));
     })();
@@ -53,6 +57,7 @@ const Dashboard = () => {
         if(completions){
           setCompletions(completions);
         }
+        setLoading(false);
       }
     })();
   }, [habitsClient])
@@ -103,14 +108,23 @@ const Dashboard = () => {
     setEditingListId(listId);
   }
 
-  return (
+  return loading ? 
+    <main className='flex flex-col justify-center items-center' style={{minHeight: 'calc(100vh - 56px)'}}>
+      <p>Getting your profile ready</p>
+      <Triangle
+        height="60"
+        width="80"
+        color="#5a9188"
+        wrapperStyle={{}}
+        visible={true} />
+    </main> : (
     <main className="flex flex-col px-10" style={{minHeight: 'calc(100vh - 56px)'}}>
       <div className='p-5 text-right'>
         <p>Lvl {level}: {points} points</p>
       </div>
       <div className='flex flex-wrap flex-row justify-center gap-10'>
         <div className="max-w-5xl items-center justify-center font-mono text-sm h-1/3">
-          <Calendar onDateClick={(clickedDate) => setSelectedDate(clickedDate)} habits={habitLists} completions={completions}/>
+          <Calendar onDateClick={(clickedDate) => setSelectedDate(clickedDate)} startDate={user?.createdOn} habits={habitLists} completions={completions}/>
           <h4 className='text-center py-2'>{selectedDate?.toLocaleDateString()}</h4>
         </div>
         <dialog ref={modal}>

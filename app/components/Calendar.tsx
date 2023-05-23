@@ -5,13 +5,15 @@ interface CalendarProps {
     onDateClick: (date: Date) => void;
     habits: HabitListDto[];
     completions: CompletionDto[];
+    startDate: Date | undefined;
 }
 
-function Calendar({ onDateClick, habits, completions }: CalendarProps) {
+function Calendar({ onDateClick, habits, completions, startDate }: CalendarProps) {
 
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [monthIndex, setMonthIndex] = useState(0);
+  const colourGradient = ["bg-teal-800", "bg-teal-600", "bg-teal-500", "bg-teal-300"];
 
   const prevMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() - 1));
@@ -67,19 +69,10 @@ function Calendar({ onDateClick, habits, completions }: CalendarProps) {
     }
   };
 
-  const getColour = (percentage: number | null) => {
-    if (percentage === null)
-      return '';
-    else
-    if (percentage < 0.20)
-      return 'bg-red-600';
-    else if (percentage < 0.40)
-      return 'bg-amber-600';
-    else if (percentage < 0.60)
-       return 'bg-yellow-600';
-    else if (percentage < 0.80)
-      return 'bg-teal-600';
-    else return 'bg-green-600';
+  const getColour = (completedCount: number | null) => {
+    if(completedCount){
+      return `${colourGradient[completedCount]} text-white`;
+    }
   }
 
   return (
@@ -109,13 +102,10 @@ function Calendar({ onDateClick, habits, completions }: CalendarProps) {
           const selected = date && selectedDate && date.toDateString() === selectedDate.toDateString();
           const totalCount = habits.filter((x: HabitListDto) => x.createdOn && date && x.createdOn?.toISOString() <= date?.toISOString()).length;
           const completedCount = completions.filter(c => c.completedOn?.toDateString() === date?.toDateString()).length;
-          let percentage = date && date < new Date() ? completedCount / totalCount : null;
           return (
-            <div 
-                key={index} onClick={() => handleDateClick(date)}
-                className={`p-2 text-center cursor-pointer ${isCurrentDate ? 'bg-teal-700 text-white' : (selected ? 'bg-teal-500 text-white' : '' )} ${date && !isCurrentDate && !selected ? 'bg-gray-100 hover:bg-teal-300' : ''}`}>
+            <div key={index} onClick={() => handleDateClick(date)}
+                className={`p-2 text-center cursor-pointer ${getColour(completedCount)} ${isCurrentDate ? 'bg-slate-700 text-white' : (selected ? 'bg-teal-500 text-white' : '' )} ${date && !isCurrentDate && !selected ? 'bg-gray-100 hover:text-white hover:bg-slate-500' : ''}`}>
               {date ? date.getDate() : ''}
-              <div className={`rounded-full ${getColour(percentage)}`} style={{width: '5px', height: '5px'}}></div>
             </div>
           );
         })}

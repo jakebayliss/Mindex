@@ -1111,6 +1111,7 @@ export interface ICompleteHabitCommand {
 export class UserDto implements IUserDto {
     points?: number;
     level?: number;
+    createdOn?: Date;
 
     constructor(data?: IUserDto) {
         if (data) {
@@ -1125,6 +1126,7 @@ export class UserDto implements IUserDto {
         if (_data) {
             this.points = _data["points"];
             this.level = _data["level"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
         }
     }
 
@@ -1139,6 +1141,7 @@ export class UserDto implements IUserDto {
         data = typeof data === 'object' ? data : {};
         data["points"] = this.points;
         data["level"] = this.level;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         return data;
     }
 }
@@ -1146,12 +1149,14 @@ export class UserDto implements IUserDto {
 export interface IUserDto {
     points?: number;
     level?: number;
+    createdOn?: Date;
 }
 
 export class User implements IUser {
     userId?: string;
     displayName?: string;
     points?: number;
+    createdOn?: Date;
 
     constructor(data?: IUser) {
         if (data) {
@@ -1167,6 +1172,7 @@ export class User implements IUser {
             this.userId = _data["userId"];
             this.displayName = _data["displayName"];
             this.points = _data["points"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
         }
     }
 
@@ -1182,6 +1188,7 @@ export class User implements IUser {
         data["userId"] = this.userId;
         data["displayName"] = this.displayName;
         data["points"] = this.points;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         return data;
     }
 }
@@ -1190,6 +1197,7 @@ export interface IUser {
     userId?: string;
     displayName?: string;
     points?: number;
+    createdOn?: Date;
 }
 
 export class CreateUserCommand implements ICreateUserCommand {
