@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Completions.Queries.GetCompletions;
+using Application.Habits.Queries.GetUserHabits;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -34,12 +35,19 @@ namespace Application.Habits.Commands.CompleteHabit
 			var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken)
 				?? throw new NotFoundException(nameof(User), request.UserId);
 			
-			var lastCompletion = await _context.Completions.Where(x => x.HabitId == request.HabitId)
+			var lastCompletion = await _context.Completions.Where(x => x.HabitId == request.HabitId && x.CompletedOn < request.Date)
 				.OrderByDescending(x => x.CompletedOn)
 				.FirstOrDefaultAsync(cancellationToken);
 
-			user.Points += 10;
-			user.Points = _pointsService.CalculatePoints(user, habit, lastCompletion);
+			var streak = _pointsService.GetStreak(habit, lastCompletion);
+
+			habit.Streak = streak;
+			habit.Points = _pointsService.CalculateHabitPoints(habit, streak);
+			habit.Level = _pointsService.CalculateLevel(habit.Points);
+			_context.Habits.Update(habit);
+			await _context.SaveChangesAsync(cancellationToken);
+
+			user.Points = _pointsService.CalculateTotalPoints(user, streak);
 			_context.Users.Update(user);
 			await _context.SaveChangesAsync(cancellationToken);
 			
@@ -56,9 +64,10 @@ namespace Application.Habits.Commands.CompleteHabit
 			return new CompletionDto
 			{
 				CompletedOn = localDate,
-				HabitId = completion.HabitId,
+				ListId = habit.HabitListId,
+				Habit = new HabitDto { Id = habit.Id, Points = habit.Points, Level = habit.Level },
 				Points = user.Points,
-				Level = _pointsService.CalculateLevel(user.Points)
+				Level = _pointsService.CalculateLevel(user.Points),
 			};
 		}
 	}

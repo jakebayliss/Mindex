@@ -104,7 +104,7 @@ function Calendar({ onDateClick, habits, completions, startDate }: CalendarProps
           const completedCount = completions.filter(c => c.completedOn?.toDateString() === date?.toDateString()).length;
           return (
             <div key={index} onClick={() => handleDateClick(date)}
-                className={`p-2 text-center cursor-pointer ${getColour(completedCount)} ${isCurrentDate ? 'bg-slate-700 text-white' : (selected ? 'bg-teal-500 text-white' : '' )} ${date && !isCurrentDate && !selected ? 'bg-gray-100 hover:text-white hover:bg-slate-500' : ''}`}>
+                className={`p-2 text-center cursor-pointer ${getColour(completedCount)} ${isCurrentDate ? 'bg-slate-700 text-white' : (selected ? 'bg-slate-500 text-white' : '' )} ${date && !isCurrentDate && !selected ? 'bg-gray-100 hover:text-white hover:bg-slate-500' : ''}`}>
               {date ? date.getDate() : ''}
             </div>
           );

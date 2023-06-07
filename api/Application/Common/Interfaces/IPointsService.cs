@@ -4,7 +4,9 @@ namespace Application.Common.Interfaces
 {
 	public interface IPointsService
 	{
-		double CalculatePoints(User user, Habit habit, Completion lastCompletion);
+		double CalculateTotalPoints(User user, int streak);
+		double CalculateHabitPoints(Habit habit, int streak);
 		int CalculateLevel(double points);
+		int GetStreak(Habit habit, Completion lastCompletion);
 	}
 }

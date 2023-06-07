@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Entities;
+using Application.Habits.Queries.GetUserHabits;
 using MediatR;
 
 namespace Application.Completions.Queries.GetCompletions
@@ -12,7 +12,8 @@ namespace Application.Completions.Queries.GetCompletions
 
 	public class CompletionDto
 	{
-		public int HabitId { get; set; }
+		public int ListId { get; set; }
+		public HabitDto Habit { get; set; }
 		public DateTime CompletedOn { get; set; }
 		public double Points { get; set; }
 		public int Level { get; set; }
@@ -29,16 +30,27 @@ namespace Application.Completions.Queries.GetCompletions
 
 		public async Task<IEnumerable<CompletionDto>> Handle(GetCompletionsQuery request, CancellationToken cancellationToken)
 		{
-			var completions = _context.Completions.Where(x => x.UserId == request.UserId);
+			var completions = _context.Completions.Where(x => x.UserId == request.UserId).ToList();
+			var habits = _context.HabitLists.Where(x => x.UserId == request.UserId).SelectMany(x => x.Habits).ToList();
 			if (!completions.Any())
 			{
 				return new List<CompletionDto>();
 			}
 
-			return completions.Select(x => new CompletionDto
+			return completions.Select(x =>
 			{
-				HabitId = x.HabitId,
-				CompletedOn = x.CompletedOn
+				var habit = habits.FirstOrDefault(h => h.Id == x.HabitId);
+				return new CompletionDto
+				{
+					Habit = new HabitDto
+					{
+						Id = habit.Id,
+						ListId = habit.HabitListId,
+						Points = habit.Points,
+						Level = habit.Level
+					},
+					CompletedOn = x.CompletedOn
+				};
 			});
 		}
 	}

@@ -11,6 +11,8 @@ public class Habit
 	public DateTime? Reminder { get; set; }
 	public DateTime CreatedOn { get; set; }
 	public int Streak { get; set; }
+	public double Points { get; set; }
+	public int Level { get; set; }
 
 
 	public int HabitListId { get; set; }

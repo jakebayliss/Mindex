@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { CompleteHabitCommand, CompletionDto, HabitListDto, HabitsClient, NewListCommand, NewHabitCommand, UsersClient, CreateUserCommand, UserDto } from '../api-client';
+import { CompleteHabitCommand, CompletionDto, HabitListDto, HabitsClient, NewListCommand, NewHabitCommand, UsersClient, CreateUserCommand, UserDto, HabitDto } from '../api-client';
 import { useMsal } from '@azure/msal-react';
 import { BASE_API_URL } from '../config';
 
@@ -91,16 +91,36 @@ const Dashboard = () => {
       return;
     }
 
+    if(!(selectedDate.toLocaleDateString() == new Date(Date.now()).toLocaleDateString())) {
+      console.log('selectedDate', selectedDate.toLocaleDateString());
+      console.log('today', new Date(Date.now()).toLocaleDateString());
+      return;
+    }
+
     if(habitsClient && b2cUser) {
         const completion = await habitsClient.completeHabit(b2cUser.localAccountId, new CompleteHabitCommand({habitId, date: new Date(selectedDate.toISOString())}));
         setCompletions([...completions, completion]);
         setPoints(completion.points);
         setLevel(completion.level);
+
+        const list = habitLists.find(x => x.id == completion.listId);
+        const listIndex = habitLists.indexOf(list as HabitListDto);
+        const habits = list?.habits;
+        if(habits) {
+          const habitIndex = habits?.indexOf(habits.find(x => x.id == completion?.habit?.id) as HabitDto);
+          habits[habitIndex as number] = completion.habit as HabitDto;
+          list.habits = habits;
+          setHabitLists(prevItems => {
+            const newItems = [...prevItems];
+            newItems[listIndex] = { ...list }  as HabitListDto;
+            return newItems;
+          });
+        }
     }
   }
 
   const isHabitCompleted = (habitId: number | undefined) => {
-    return completions.filter(x => x.completedOn?.toLocaleDateString() == selectedDate.toLocaleDateString()).map(x => x.habitId).includes(habitId);
+    return completions.filter(x => x.completedOn?.toLocaleDateString() == selectedDate.toLocaleDateString()).map(x => x.habit?.id).includes(habitId);
   }
 
   const openAddHabitModal = (listId: number | undefined) => {
@@ -125,7 +145,7 @@ const Dashboard = () => {
       <div className='flex flex-wrap flex-row justify-center gap-10'>
         <div className="max-w-5xl items-center justify-center font-mono text-sm h-1/3">
           <Calendar onDateClick={(clickedDate) => setSelectedDate(clickedDate)} startDate={user?.createdOn} habits={habitLists} completions={completions}/>
-          <h4 className='text-center py-2'>{selectedDate?.toLocaleDateString()}</h4>
+          <h4 className='text-center py-2'>{selectedDate?.toDateString()}</h4>
         </div>
         <dialog ref={modal}>
           <div className='flex flex-col gap-2'>
@@ -148,9 +168,12 @@ const Dashboard = () => {
                 {list.habits && list.habits.length > 0 && (
                   list.habits.map((habit, i) => (
                     <li key={i} className="flex justify-between">
-                      <span>
-                        {habit.title}
-                      </span>
+                      <div>
+                        <span className='w-7 inline-block'>[{habit.level}]</span>
+                        <span>
+                          {habit.title}
+                        </span>
+                      </div>
                       <button onClick={() => handleHabitCompletion(habit.id)}>{isHabitCompleted(habit.id) ? '☑️' : '🔲'}</button>
                     </li>
                   ))

@@ -40,7 +40,9 @@ public class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQuery, Use
 					Title = y.Title,
 					Note = y.Note,
 					Reminder = y.Reminder,
-					ListId = x.Id
+					ListId = x.Id,
+					Points = y.Points,
+					Level = _pointsService.CalculateLevel(y.Points)
 				}).OrderBy(x => x.CreatedOn).ToList(),
 				Points = points ?? 0,
 				Level = level

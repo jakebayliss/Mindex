@@ -619,6 +619,8 @@ export class HabitDto implements IHabitDto {
     createdOn?: Date;
     reminder?: Date | undefined;
     listId?: number;
+    points?: number;
+    level?: number;
 
     constructor(data?: IHabitDto) {
         if (data) {
@@ -637,6 +639,8 @@ export class HabitDto implements IHabitDto {
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.reminder = _data["reminder"] ? new Date(_data["reminder"].toString()) : <any>undefined;
             this.listId = _data["listId"];
+            this.points = _data["points"];
+            this.level = _data["level"];
         }
     }
 
@@ -655,6 +659,8 @@ export class HabitDto implements IHabitDto {
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         data["reminder"] = this.reminder ? this.reminder.toISOString() : <any>undefined;
         data["listId"] = this.listId;
+        data["points"] = this.points;
+        data["level"] = this.level;
         return data;
     }
 }
@@ -666,6 +672,8 @@ export interface IHabitDto {
     createdOn?: Date;
     reminder?: Date | undefined;
     listId?: number;
+    points?: number;
+    level?: number;
 }
 
 export class NewListCommand implements INewListCommand {
@@ -795,6 +803,8 @@ export class Habit implements IHabit {
     reminder?: Date | undefined;
     createdOn?: Date;
     streak?: number;
+    points?: number;
+    level?: number;
     habitListId?: number;
 
     constructor(data?: IHabit) {
@@ -814,6 +824,8 @@ export class Habit implements IHabit {
             this.reminder = _data["reminder"] ? new Date(_data["reminder"].toString()) : <any>undefined;
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.streak = _data["streak"];
+            this.points = _data["points"];
+            this.level = _data["level"];
             this.habitListId = _data["habitListId"];
         }
     }
@@ -833,6 +845,8 @@ export class Habit implements IHabit {
         data["reminder"] = this.reminder ? this.reminder.toISOString() : <any>undefined;
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         data["streak"] = this.streak;
+        data["points"] = this.points;
+        data["level"] = this.level;
         data["habitListId"] = this.habitListId;
         return data;
     }
@@ -845,6 +859,8 @@ export interface IHabit {
     reminder?: Date | undefined;
     createdOn?: Date;
     streak?: number;
+    points?: number;
+    level?: number;
     habitListId?: number;
 }
 
@@ -1017,7 +1033,8 @@ export interface IUpdateListCommand {
 }
 
 export class CompletionDto implements ICompletionDto {
-    habitId?: number;
+    listId?: number;
+    habit?: HabitDto;
     completedOn?: Date;
     points?: number;
     level?: number;
@@ -1033,7 +1050,8 @@ export class CompletionDto implements ICompletionDto {
 
     init(_data?: any) {
         if (_data) {
-            this.habitId = _data["habitId"];
+            this.listId = _data["listId"];
+            this.habit = _data["habit"] ? HabitDto.fromJS(_data["habit"]) : <any>undefined;
             this.completedOn = _data["completedOn"] ? new Date(_data["completedOn"].toString()) : <any>undefined;
             this.points = _data["points"];
             this.level = _data["level"];
@@ -1049,7 +1067,8 @@ export class CompletionDto implements ICompletionDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["habitId"] = this.habitId;
+        data["listId"] = this.listId;
+        data["habit"] = this.habit ? this.habit.toJSON() : <any>undefined;
         data["completedOn"] = this.completedOn ? this.completedOn.toISOString() : <any>undefined;
         data["points"] = this.points;
         data["level"] = this.level;
@@ -1058,7 +1077,8 @@ export class CompletionDto implements ICompletionDto {
 }
 
 export interface ICompletionDto {
-    habitId?: number;
+    listId?: number;
+    habit?: HabitDto;
     completedOn?: Date;
     points?: number;
     level?: number;

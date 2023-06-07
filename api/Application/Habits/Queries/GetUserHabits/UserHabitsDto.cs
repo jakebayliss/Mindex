@@ -26,5 +26,7 @@ public class HabitDto : IMapFrom<Habit>
 	public DateTime CreatedOn { get; set; }
 	public DateTime? Reminder { get; set; }
 	public int ListId { get; set; }
+	public double Points { get; set; }
+	public int Level { get; set; }
 }
 	

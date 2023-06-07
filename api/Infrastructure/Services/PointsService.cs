@@ -1,20 +1,29 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
+using System.IO;
 
 namespace Infrastructure.Services
 {
 	public class PointsService : IPointsService
 	{
-		public double CalculatePoints(User user, Habit habit, Completion? lastCompletion)
+		public double CalculateTotalPoints(User user, int streak)
 		{
-			var streak = 0;
-			if(lastCompletion != null)
+			return user.Points + 10 + (streak * 10);
+		}
+
+		public double CalculateHabitPoints(Habit habit, int streak)
+		{
+			return habit.Points + 10 + (streak * 10);
+		}
+
+		public int GetStreak(Habit habit, Completion lastCompletion)
+		{
+			if (lastCompletion != null)
 			{
 				var carryOnStreak = lastCompletion.CompletedOn > DateTime.Now.AddDays(-1);
-				streak = carryOnStreak ? habit.Streak + 1 : 0;
+				return carryOnStreak ? habit.Streak + 1 : 0;
 			}
-
-			return user.Points + (streak * 10);
+			return 0;
 		}
 
 		public int CalculateLevel(double points)
