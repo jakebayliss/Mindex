@@ -13,7 +13,7 @@ function Calendar({ onDateClick, habits, completions, startDate }: CalendarProps
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [monthIndex, setMonthIndex] = useState(0);
-  const colourGradient = ["bg-teal-800", "bg-teal-600", "bg-teal-500", "bg-teal-300"];
+  const colourGradient = ["bg-green-900", "bg-green-800", "bg-green-700", "bg-green-600"];
 
   const prevMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() - 1));

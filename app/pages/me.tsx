@@ -169,7 +169,7 @@ const Dashboard = () => {
                   list.habits.map((habit, i) => (
                     <li key={i} className="flex justify-between">
                       <div>
-                        <span className='w-7 inline-block'>[{habit.level}]</span>
+                        <span className='inline-block mr-1'>[Lvl {habit.level}]</span>
                         <span>
                           {habit.title}
                         </span>
