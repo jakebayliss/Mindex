@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:MauiApp1"
+             mc:Ignorable="d"
+             x:Class="MauiApp1.MainPage">
+
+    <ScrollView>
+        <StackLayout>
+            <StackLayout Padding="20" VerticalOptions="CenterAndExpand">
+                <Label Text="Build better habits with"
+                           FontSize="24"
+                           HorizontalOptions="Center" />
+
+                <Label Text="Mindex"
+                           FontSize="64"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+
+            
+            </StackLayout>
+            <StackLayout Margin="20" VerticalOptions="End">
+                <Button Text="Sign In" Clicked="OnSignInClicked" />
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

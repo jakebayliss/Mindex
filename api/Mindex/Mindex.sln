@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "..\Applicati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "..\Domain\Domain.csproj", "{56C9B461-09FB-431D-B694-896CC74B1F3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mindex.Test", "..\Mindex.Test\Mindex.Test.csproj", "{1C9BC659-3E4E-4C1D-8395-9A9BE27C8418}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mindex.Test", "..\Mindex.Test\Mindex.Test.csproj", "{1C9BC659-3E4E-4C1D-8395-9A9BE27C8418}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiApp", "..\MauiApp1\MauiApp.csproj", "{A4D928BF-C8A7-4C59-9BB0-21F350CEBCA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,12 @@ Global
 		{1C9BC659-3E4E-4C1D-8395-9A9BE27C8418}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C9BC659-3E4E-4C1D-8395-9A9BE27C8418}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C9BC659-3E4E-4C1D-8395-9A9BE27C8418}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4D928BF-C8A7-4C59-9BB0-21F350CEBCA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4D928BF-C8A7-4C59-9BB0-21F350CEBCA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4D928BF-C8A7-4C59-9BB0-21F350CEBCA3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{A4D928BF-C8A7-4C59-9BB0-21F350CEBCA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4D928BF-C8A7-4C59-9BB0-21F350CEBCA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4D928BF-C8A7-4C59-9BB0-21F350CEBCA3}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
