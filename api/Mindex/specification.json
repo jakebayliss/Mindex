@@ -423,6 +423,38 @@
         }
       }
     },
+    "/api/Users/{email}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_GetUserFromEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Users/new": {
       "post": {
         "tags": [
@@ -748,6 +780,9 @@
             "type": "string",
             "format": "guid"
           },
+          "email": {
+            "type": "string"
+          },
           "displayName": {
             "type": "string"
           },
@@ -768,6 +803,9 @@
           "userId": {
             "type": "string",
             "format": "guid"
+          },
+          "email": {
+            "type": "string"
           },
           "displayName": {
             "type": "string"

@@ -1,5 +1,7 @@
 ﻿using Application.Users.Commands.CreateUser;
-using Application.Users.Queries.CheckUserExists;
+using Application.Users.Common;
+using Application.Users.Queries.GetUserFromEmail;
+using Application.Users.Queries.GetUserFromUserId;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +22,13 @@ namespace Mindex.Controllers
 		[HttpGet("{userId}")]
 		public async Task<UserDto> GetUser(string userId)
 		{
-			return await _mediator.Send(new GetUserQuery { UserId = new Guid(userId) });
+			return await _mediator.Send(new GetUserFromUserIdQuery { UserId = new Guid(userId) });
+		}
+
+		[HttpGet("{email}")]
+		public async Task<UserDto> GetUserFromEmail(string email)
+		{
+			return await _mediator.Send(new GetUserFromEmailQuery { Email = email });
 		}
 
 		[HttpPost("new")]

@@ -7,6 +7,7 @@ namespace Application.Users.Commands.CreateUser
 	public class CreateUserCommand : IRequest<User>
 	{
 		public Guid UserId { get; set; }
+		public string Email { get; set; }
 		public string DisplayName { get; set; }
 	}
 	public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
@@ -23,6 +24,7 @@ namespace Application.Users.Commands.CreateUser
 			var user = new User
 			{
 				UserId = command.UserId,
+				Email = command.Email,
 				DisplayName = command.DisplayName,
 				CreatedOn = DateTime.Now
 			};

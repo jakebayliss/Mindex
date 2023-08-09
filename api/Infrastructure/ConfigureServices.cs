@@ -13,9 +13,10 @@ public static class ConfigureServices
 	public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddScoped<AuditableEntitySaveChangesInterceptor>();
-		
+
+		var connectionString = configuration.GetConnectionString("DefaultConnection");
 		services.AddDbContext<ApplicationDbContext>(options =>
-			options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+			options.UseSqlServer(connectionString,
 				builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
 		services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
@@ -23,7 +24,9 @@ public static class ConfigureServices
 		services.AddScoped<ApplicationDbContextInitialiser>();
 
 		services.AddTransient<IDateTime, DateTimeService>();
+		services.AddTransient<IUserService, UserService>();
 		services.AddTransient<IPointsService, PointsService>();
+		services.AddTransient<IHabitService, HabitService>();
 
 		return services;
 	}
