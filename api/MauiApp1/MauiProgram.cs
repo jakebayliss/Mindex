@@ -1,10 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Identity.Client;
+using Application.Common.Interfaces;
+using Infrastructure.Services;
+using MauiApp1.ViewModels;
+using MauiApp1.Services;
+using Infrastructure.Persistence;
+using Microsoft.Extensions.Configuration;
 
 namespace MauiApp1;
 
-public static class MauiProgram
+public static partial class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
@@ -29,10 +35,28 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
+		var config = new ConfigurationBuilder()
+			.AddJsonFile("appsettings.json")
+			.Build();
+		builder.Configuration.AddConfiguration(config);
+		
+		builder.Services.AddInfrastructureServices(builder.Configuration);
+		builder.Services.AddApplicationServices();
+
+		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddTransient<HomePage>();
+		builder.Services.AddTransient<HomePageViewModel>();
+
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
 
-		return builder.Build();
+		var app = builder.Build();
+
+		ServiceHelper.Initialize(app.Services);
+
+		return app;
 	}
+
+	static partial void UseAutoreg(IServiceCollection services);
 }

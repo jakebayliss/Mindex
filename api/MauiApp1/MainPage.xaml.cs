@@ -1,15 +1,21 @@
-﻿using Microsoft.Datasync.Client;
+﻿using Application.Common.Interfaces;
+using MauiApp1.ViewModels;
 using Microsoft.Identity.Client;
-using Microsoft.Maui.ApplicationModel.Communication;
 using System.Diagnostics;
+using Maui.Plugins.PageResolver;
 
 namespace MauiApp1;
 
 public partial class MainPage : ContentPage
 {
-	public MainPage()
+	private readonly IUserService _userService;
+	private readonly IHabitService _habitService;
+
+	public MainPage(IUserService userService, IHabitService habitService)
 	{
 		InitializeComponent();
+		_userService = userService;
+		_habitService = habitService;
 	}
 
 	private async void OnSignInClicked(object sender, EventArgs e)
@@ -23,7 +29,8 @@ public partial class MainPage : ContentPage
 			result = await App.PCA.AcquireTokenSilent(new List<string> { "https://mindexb2c.onmicrosoft.com/api/read" }, accounts.FirstOrDefault())
 				.ExecuteAsync();
 
-			await Navigation.PushAsync(new HomePage());
+			var email = result.ClaimsPrincipal.Claims.FirstOrDefault(x => x.Type == "preferred_username");
+			await Navigation.PushAsync(new HomePage(_userService, _habitService, new HomePageViewModel(), email.Value));
 		}
 		catch (MsalUiRequiredException)
 		{
@@ -42,7 +49,8 @@ public partial class MainPage : ContentPage
 					.ExecuteAsync();
 
 				var name = result.ClaimsPrincipal.Claims.FirstOrDefault(x => x.Type == "name");
-				await Navigation.PushAsync(new HomePage{ BindingContext = name });
+				var email = result.ClaimsPrincipal.Claims.FirstOrDefault(x => x.Type == "preferred_username");
+				await Navigation.PushAsync(new HomePage(_userService, _habitService, new HomePageViewModel(), email.Value));
 			}
 			catch (Exception ex)
 			{
