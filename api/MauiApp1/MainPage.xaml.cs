@@ -3,6 +3,7 @@ using MauiApp1.ViewModels;
 using Microsoft.Identity.Client;
 using System.Diagnostics;
 using Maui.Plugins.PageResolver;
+using Microsoft.Maui.ApplicationModel.Communication;
 
 namespace MauiApp1;
 
@@ -20,6 +21,9 @@ public partial class MainPage : ContentPage
 
 	private async void OnSignInClicked(object sender, EventArgs e)
 	{
+#if DEBUG
+		await Navigation.PushAsync(new HomePage(_userService, _habitService, new HomePageViewModel(), "bayliss.jw@gmail.com"));
+#else
 		var accounts = await App.PCA.GetAccountsAsync();
 		AuthenticationResult result = null;
 		bool tryInteractiveLogin = false;
@@ -57,6 +61,7 @@ public partial class MainPage : ContentPage
 				Debug.WriteLine($"MSAL Interactive Error: {ex.Message}");
 			}
 		}
+#endif
 	}
 
 	private async void OnSignOutClicked(object sender, EventArgs e)

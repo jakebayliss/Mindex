@@ -7,13 +7,74 @@
              mc:Ignorable="d"
              x:Class="MauiApp1.HomePage">
 
-    <ScrollView>
-        <StackLayout Padding="20" VerticalOptions="CenterAndExpand">
+    <StackLayout VerticalOptions="FillAndExpand">
+        <StackLayout Padding="10" Orientation="Vertical">
+            <Label Text="{Binding Name, StringFormat='Hey {0}!'}" FontAttributes="Bold" />
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Lvl: " />
+                        <Span Text="{Binding TotalLevel}"/>
+                        <Span Text=", " />
+                        <Span Text="Exp: " />
+                        <Span Text="{Binding TotalPoints}"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
 
-            <Label Text="HI"
-                       FontSize="24"
-                       HorizontalOptions="Center" />
-
+            <BoxView Color="Gray"  
+                      Margin="-10,10,-10,-10"                   
+                      HeightRequest="1"  
+                      HorizontalOptions="Fill" />
         </StackLayout>
-    </ScrollView>
+
+        <StackLayout Orientation="Vertical">
+            <CollectionView x:Name="calendarCollectionView">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="7"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Day}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsCurrentDay}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="Green" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+            <Label Text="{Binding SelectedDate, StringFormat='{0:dddd, MMMM d, yyyy}'}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+
+        <!-- Habit lists -->
+        <ScrollView VerticalOptions="FillAndExpand">
+            <StackLayout Spacing="10">
+                <!-- Habit list items -->
+                <CollectionView ItemsSource="{Binding HabitLists}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="LightGray">
+                                    <Label Text="{Binding Title}" FontAttributes="Bold"/>
+                                </StackLayout>
+                                <CollectionView ItemsSource="{Binding Habits}" SelectionMode="None">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackLayout>
+                                                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="#efefef">
+                                                    <Label Text="{Binding Title}" FontAttributes="Bold"/>
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+        </ScrollView>
+    </StackLayout>
 </ContentPage>
