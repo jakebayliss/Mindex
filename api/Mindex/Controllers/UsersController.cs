@@ -1,4 +1,5 @@
-﻿using Application.Users.Commands.CreateUser;
+﻿using Application.Users.Commands.AddUser;
+using Application.Users.Commands.CreateUser;
 using Application.Users.Common;
 using Application.Users.Queries.GetUserFromEmail;
 using Application.Users.Queries.GetUserFromUserId;
@@ -33,6 +34,13 @@ namespace Mindex.Controllers
 
 		[HttpPost("new")]
 		public async Task<ActionResult<User>> CreateUser(CreateUserCommand command)
+		{
+			var user = await _mediator.Send(command);
+			return Ok(user);
+		}
+
+		[HttpPost("newjpuser")]
+		public async Task<ActionResult<JPUser>> CreateJPUser(CreateJPUserCommand command)
 		{
 			var user = await _mediator.Send(command);
 			return Ok(user);

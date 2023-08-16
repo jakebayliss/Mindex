@@ -23,7 +23,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     }
 
     public DbSet<User> Users => Set<User>();
-    public DbSet<HabitList> HabitLists => Set<HabitList>();
+	public DbSet<JPUser> JPUsers => Set<JPUser>();
+	public DbSet<HabitList> HabitLists => Set<HabitList>();
     public DbSet<Habit> Habits => Set<Habit>();
     public DbSet<Completion> Completions => Set<Completion>();
 
