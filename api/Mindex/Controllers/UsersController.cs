@@ -1,17 +1,17 @@
 ﻿using Application.Users.Commands.AddUser;
 using Application.Users.Commands.CreateUser;
 using Application.Users.Common;
+using Application.Users.Queries.GetJPUserProducts;
 using Application.Users.Queries.GetUserFromEmail;
 using Application.Users.Queries.GetUserFromUserId;
 using Domain.Entities;
+using DPMSeedling.WebAPI.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mindex.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class UsersController : ControllerBase
+	public class UsersController : ApiControllerBase
 	{
 		private readonly IMediator _mediator;
 
@@ -39,6 +39,12 @@ namespace Mindex.Controllers
 			return Ok(user);
 		}
 
+		[HttpGet("/jpusers/{email}")]
+		public async Task<JPUserDto> GetJPUserFromEmail(string email)
+		{
+			return await _mediator.Send(new GetJPUserProductsQuery { Email = email });
+		}
+		
 		[HttpPost("newjpuser")]
 		public async Task<ActionResult<JPUser>> CreateJPUser(CreateJPUserCommand command)
 		{

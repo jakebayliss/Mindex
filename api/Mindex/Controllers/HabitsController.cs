@@ -8,14 +8,13 @@ using Application.Habits.Commands.UpdateHabit;
 using Application.Habits.Commands.UpdateList;
 using Application.Habits.Queries.GetUserHabits;
 using Domain.Entities;
+using DPMSeedling.WebAPI.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mindex.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class HabitsController : ControllerBase
+	public class HabitsController : ApiControllerBase
 	{
 		private readonly IMediator _mediator;
 		

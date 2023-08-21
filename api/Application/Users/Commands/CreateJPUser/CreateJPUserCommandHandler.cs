@@ -2,35 +2,33 @@
 using Domain.Entities;
 using MediatR;
 
-namespace Application.Users.Commands.AddUser
+namespace Application.Users.Commands.AddUser;
+public class CreateJPUserCommand : IRequest<JPUser>
 {
-	public class CreateJPUserCommand : IRequest<JPUser>
-	{
-		public string Name { get; set; }
-		public string Email { get; set; }
-		public string Product { get; set; }
-	}
-	
-	public class CreateJPUserCommandHandler : IRequestHandler<CreateJPUserCommand, JPUser>
-	{
-		private readonly IApplicationDbContext _context;
-		
-		public CreateJPUserCommandHandler(IApplicationDbContext context)
-		{
-			_context = context;
-		}
+	public string Name { get; set; }
+	public string Email { get; set; }
+	public string Product { get; set; }
+}
 
-		public async Task<JPUser> Handle(CreateJPUserCommand command, CancellationToken cancellationToken)
+public class CreateJPUserCommandHandler : IRequestHandler<CreateJPUserCommand, JPUser>
+{
+	private readonly IApplicationDbContext _context;
+	
+	public CreateJPUserCommandHandler(IApplicationDbContext context)
+	{
+		_context = context;
+	}
+
+	public async Task<JPUser> Handle(CreateJPUserCommand command, CancellationToken cancellationToken)
+	{
+		var user = new JPUser
 		{
-			var user = new JPUser
-			{
-				Name = command.Name,
-				Email = command.Email,
-				Product = command.Product,
-			};
-			var newUserEntity = await _context.JPUsers.AddAsync(user);
-			await _context.SaveChangesAsync(cancellationToken);
-			return newUserEntity.Entity;
-		}
+			Name = command.Name,
+			Email = command.Email,
+			Product = command.Product,
+		};
+		var newUserEntity = await _context.JPUsers.AddAsync(user);
+		await _context.SaveChangesAsync(cancellationToken);
+		return newUserEntity.Entity;
 	}
 }
