@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Mindex API",
@@ -18,7 +18,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -54,7 +55,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -102,7 +104,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -150,7 +153,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -198,7 +202,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -246,7 +251,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -294,7 +300,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -342,7 +349,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           },
@@ -391,7 +399,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -439,7 +448,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -475,7 +485,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -548,7 +559,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 1
           }
